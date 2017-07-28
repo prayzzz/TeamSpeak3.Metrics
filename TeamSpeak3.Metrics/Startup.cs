@@ -13,20 +13,13 @@ namespace TeamSpeak3.Metrics
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
 
         private IConfigurationRoot Configuration { get; }
-
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-
-            return services.BuildServiceProvider();
-        }
 
         public override void Configure(IApplicationBuilder app)
         {
@@ -37,6 +30,13 @@ namespace TeamSpeak3.Metrics
             loggerFactory.AddDebug();
 
             app.UseMvc();
+        }
+
+        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            return services.BuildServiceProvider();
         }
     }
 }

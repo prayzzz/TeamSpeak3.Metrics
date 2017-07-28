@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace TeamSpeak3.Metrics.Connection
+namespace TeamSpeak3.Metrics.Query
 {
-    public class QueryResponse<T> : QueryResponse
+    public class Response<T> : Response where T : new()
     {
-        public QueryResponse(string response) : base(response)
+        public Response(string response) : base(response)
         {
+            Data = response.Split('|')
+                           .Select(s => ExtractData(s))
+                           .Select(d => DataMapper.Map<T>(d))
+                           .ToList();
         }
 
-        public T Data { get; set; }
+        public List<T> Data { get; set; }
     }
 
-    public class QueryResponse
+    public class Response
     {
         private static readonly string[] Separator = { Environment.NewLine };
 
-        private static readonly Regex KeyValuePattern = new Regex($@"(?<key>\w+)=(?<value>.+)");
+        private static readonly Regex KeyValuePattern = new Regex(@"(?<key>\w+)=(?<value>.+)");
 
-        public QueryResponse(string response)
+        public Response(string response)
         {
             var lines = response.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 
-            EvaluateErrorLine(lines.FirstOrDefault(l => l.StartsWith("error")));
+            MapErrorLine(lines.FirstOrDefault(l => l.StartsWith("error")));
         }
 
         public int ErrorId { get; set; } = -1;
@@ -33,17 +37,11 @@ namespace TeamSpeak3.Metrics.Connection
 
         public bool HasError => ErrorId != 0;
 
-        private void EvaluateErrorLine(string errorLine)
+        protected static Dictionary<string, string> ExtractData(string objectLine)
         {
-            if (string.IsNullOrEmpty(errorLine))
-            {
-                return;
-            }
-
-            var pairs = errorLine.Split(' ');
-
             var data = new Dictionary<string, string>();
-            foreach (var val in pairs)
+
+            foreach (var val in objectLine.Split(' '))
             {
                 var match = KeyValuePattern.Match(val);
 
@@ -55,6 +53,18 @@ namespace TeamSpeak3.Metrics.Connection
                 data[match.Groups["key"].Value] = match.Groups["value"].Value;
             }
 
+            return data;
+        }
+
+        private void MapErrorLine(string errorLine)
+        {
+            if (string.IsNullOrEmpty(errorLine))
+            {
+                return;
+            }
+
+            var data = ExtractData(errorLine);
+
             if (data.TryGetValue("id", out var errorIdString))
             {
                 if (int.TryParse(errorIdString, out var errorId))
@@ -65,7 +75,7 @@ namespace TeamSpeak3.Metrics.Connection
 
             if (data.TryGetValue("msg", out var msg))
             {
-                ErrorMessage = msg;
+                ErrorMessage = Replacer.Replace(msg);
             }
         }
     }

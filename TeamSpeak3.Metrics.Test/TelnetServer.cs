@@ -9,17 +9,32 @@ namespace TeamSpeak3.Metrics.Test
 {
     public class TelnetServer : IDisposable
     {
-        private readonly Dictionary<string, string> _setup;
-        private bool _isRunning = false;
+        private static readonly PortNumberGenerator PortGenerator = new PortNumberGenerator();
 
-        public static readonly int Port = 10011;
-        public static readonly string Ip = "127.0.0.1";
+        private readonly Dictionary<string, string> _setup;
+        private bool _isRunning;
 
         public TelnetServer()
         {
+            Ip = "127.0.0.1";
+            Port = PortGenerator.Get();
             _setup = new Dictionary<string, string>();
 
             new Thread(StartSocket).Start();
+        }
+
+        public string Ip { get; }
+
+        public int Port { get; }
+
+        public void Dispose()
+        {
+            _isRunning = false;
+        }
+
+        public void Setup(string received, string response)
+        {
+            _setup.Add(received, response);
         }
 
         private void StartSocket()
@@ -61,28 +76,28 @@ namespace TeamSpeak3.Metrics.Test
                 {
                     Console.WriteLine("ERROR: No response setup");
                 }
-
             }
 
             handler.Shutdown(SocketShutdown.Both);
             handler.Dispose();
+            socket.Dispose();
 
             Console.WriteLine("Socket shutdown");
         }
 
-        public void Setup(string received, string response)
+        private class PortNumberGenerator
         {
-            _setup.Add(received, response);
-        }
+            private int _current;
 
-        public void Dispose()
-        {
-            _isRunning = false;
-        }
+            public PortNumberGenerator()
+            {
+                _current = 50000;
+            }
 
-        public void ClearSetup()
-        {
-            _setup.Clear();
+            public int Get()
+            {
+                return _current++;
+            }
         }
     }
 }
