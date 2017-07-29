@@ -9,18 +9,18 @@ namespace TeamSpeak3.Metrics.Query
     {
         public Response(string response) : base(response)
         {
-            Data = response.Split('|')
-                           .Select(s => ExtractData(s))
-                           .Select(d => DataMapper.Map<T>(d))
-                           .ToList();
+            var data = response.Split('|')
+                               .Select(s => ExtractData(s));
+
+            Data = DataMapper.Map<T>(data);
         }
 
-        public List<T> Data { get; set; }
+        public T Data { get; set; }
     }
 
     public class Response
     {
-        private static readonly string[] Separator = { Environment.NewLine };
+        private static readonly string[] Separator = { "\n\r" };
 
         private static readonly Regex KeyValuePattern = new Regex(@"(?<key>\w+)=(?<value>.+)");
 

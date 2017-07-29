@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics
 {
@@ -35,6 +36,17 @@ namespace TeamSpeak3.Metrics
         public override IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddSingleton<PeriodicDataCollector>();
+            services.AddSingleton(async provider =>
+            {
+                var query = new TeamSpeakQuery(provider.GetService<ILogger<TeamSpeakQuery>>());
+                query.Connect("192.168.1.10", 10011);
+                await query.Login("admin", "LLwgvOk9");
+                await query.Use(9987);
+
+                return query;
+            });
 
             return services.BuildServiceProvider();
         }
