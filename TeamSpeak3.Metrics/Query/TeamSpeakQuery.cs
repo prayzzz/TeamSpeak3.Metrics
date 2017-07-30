@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -22,30 +23,18 @@ namespace TeamSpeak3.Metrics.Query
 
         public TelnetClient TelnetClient { get; private set; }
 
-        public async Task<Response<List<Client>>> ClientList()
+        public Task<Response<List<Client>>> ClientList()
         {
-            await TelnetClient.WriteLine(ClientlistCommand);
-            var response = await TelnetClient.ReadAsync();
-
-            _logger.LogDebug("Executed {Command}. Received {Response}", ClientlistCommand, response);
-
-            return new Response<List<Client>>(response);
+            return SendAndReceive<List<Client>>(ClientlistCommand);
         }
 
-        public async Task<Response<VirtualServer>> ServerInfo()
-        {
-            await TelnetClient.WriteLine(ServerInfoCommand);
-            var response = await TelnetClient.ReadAsync();
-
-            _logger.LogDebug("Executed {Command}. Received {Response}", ServerInfoCommand, response);
-
-            return new Response<VirtualServer>(response);
-        }
-
-        public bool Connect(string ip, int port)
+        public async Task<bool> Connect(string ip, int port)
         {
             var cancellationToken = new CancellationToken();
             TelnetClient = new TelnetClient(ip, port, cancellationToken);
+
+            // Read welcome message
+            await TelnetClient.ReadAsync();
 
             return TelnetClient.IsConnected;
         }
@@ -55,28 +44,53 @@ namespace TeamSpeak3.Metrics.Query
             TelnetClient.Dispose();
         }
 
-        public async Task<Response> Login(string username, string password)
+        public Task<Response> Login(string username, string password)
         {
             var command = $"login {username} {password}";
 
-            await TelnetClient.WriteLine(command);
-            var response = await TelnetClient.ReadAsync();
-
-            _logger.LogDebug("Executed {Command}. Received {Response}", command, response);
-
-            return new Response<VirtualServer>(response);
+            return SendAndReceive(command, true);
         }
 
-        public async Task<Response> Use(int port)
+        public Task<Response<VirtualServer>> ServerInfo()
+        {
+            return SendAndReceive<VirtualServer>(ServerInfoCommand);
+        }
+
+        public Task<Response> Use(int port)
         {
             var command = $"use port={port}";
 
+            return SendAndReceive(command);
+        }
+
+        private async Task<Response<T>> SendAndReceive<T>(string command, bool isPrivate = false) where T : new()
+        {
             await TelnetClient.WriteLine(command);
             var response = await TelnetClient.ReadAsync();
 
+            if (isPrivate)
+            {
+                command = command.Split(' ').FirstOrDefault();
+            }
+
             _logger.LogDebug("Executed {Command}. Received {Response}", command, response);
 
-            return new Response<VirtualServer>(response);
+            return new Response<T>(response);
+        }
+
+        private async Task<Response> SendAndReceive(string command, bool isPrivate = true)
+        {
+            await TelnetClient.WriteLine(command);
+            var response = await TelnetClient.ReadAsync();
+
+            if (isPrivate)
+            {
+                command = command.Split(' ').FirstOrDefault();
+            }
+
+            _logger.LogDebug("Executed {Command}. Received {Response}", command, response.Trim());
+
+            return new Response(response);
         }
     }
 }
