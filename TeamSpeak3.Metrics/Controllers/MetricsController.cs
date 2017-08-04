@@ -16,13 +16,21 @@ namespace TeamSpeak3.Metrics.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var metrics = new VirtualServerMetrics();
-            metrics.ClientsOnline = _collector.VirtualServer.VirtualServerClientsOnline;
-            metrics.Clients = _collector.Clients.Select(x => x.ClientNickname);
-            metrics.ServerName = _collector.VirtualServer.VirtualServerName;
-            metrics.BytesSent = _collector.VirtualServer.ConnectionBytesSentTotal;
-            metrics.BytesReceived = _collector.VirtualServer.ConnectionBytesReceivedTotal;
-            
+            var metrics = new VirtualServerMetrics
+            {
+                BytesSent = _collector.VirtualServer.ConnectionBytesSentTotal,
+                BytesReceived = _collector.VirtualServer.ConnectionBytesReceivedTotal,
+                ClientsOnline = _collector.VirtualServer.VirtualServerClientsOnline,
+                Clients = _collector.Clients.Select(x => x.ClientNickname),
+                CollectedAt = _collector.CollectedAt,
+                CollectionDuration = _collector.CollectionDuration,
+                ServerId = _collector.VirtualServer.VirtualServerId,
+                ServerName = _collector.VirtualServer.VirtualServerName,
+                Status = _collector.VirtualServer.VirtualServerStatus,
+                TotalPing = _collector.VirtualServer.VirtualServerTotalPing,
+                Uptime = _collector.VirtualServer.VirtualServerUptime
+            };
+
             return Json(metrics);
         }
     }

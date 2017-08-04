@@ -14,7 +14,7 @@
 
         public string VirtualServerCreated { get; set; }
 
-        public string VirtualServerId { get; set; }
+        public int VirtualServerId { get; set; }
 
         public string VirtualServerIp { get; set; }
 

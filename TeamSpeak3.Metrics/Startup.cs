@@ -41,7 +41,7 @@ namespace TeamSpeak3.Metrics
             services.AddSingleton(async provider =>
             {
                 var query = new TeamSpeakQuery(provider.GetService<ILogger<TeamSpeakQuery>>());
-                query.Connect("192.168.1.10", 10011);
+                await query.Connect("192.168.1.10", 10011);
                 await query.Login("admin", "LLwgvOk9");
                 await query.Use(9987);
 

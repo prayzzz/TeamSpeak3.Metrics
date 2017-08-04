@@ -15,12 +15,14 @@ namespace TeamSpeak3.Metrics.Query
             Data = DataMapper.Map<T>(data);
         }
 
-        public T Data { get; set; }
+        public T Data { get; }
     }
 
     public class Response
     {
-        private static readonly string[] Separator = { "\n\r" };
+        public const string NewLine = "\n\r";
+
+        private static readonly string[] Separator = { NewLine };
 
         private static readonly Regex KeyValuePattern = new Regex(@"(?<key>\w+)=(?<value>.+)");
 
@@ -31,9 +33,9 @@ namespace TeamSpeak3.Metrics.Query
             MapErrorLine(lines.FirstOrDefault(l => l.StartsWith("error")));
         }
 
-        public int ErrorId { get; set; } = -1;
+        public int ErrorId { get; private set; } = -1;
 
-        public string ErrorMessage { get; set; } = string.Empty;
+        public string ErrorMessage { get; private set; } = string.Empty;
 
         public bool HasError => ErrorId != 0;
 

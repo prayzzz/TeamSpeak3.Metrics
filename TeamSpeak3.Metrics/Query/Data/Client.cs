@@ -2,9 +2,9 @@
 {
     public class Client
     {
-        public int Clid { get; set; }
-
         public int Cid { get; set; }
+
+        public int Clid { get; set; }
 
         public string ClientNickname { get; set; }
 

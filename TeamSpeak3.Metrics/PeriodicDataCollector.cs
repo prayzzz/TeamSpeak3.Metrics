@@ -23,9 +23,13 @@ namespace TeamSpeak3.Metrics
             _timer = new Timer(Collect, this, TimeSpan.Zero, TimeSpan.FromSeconds(30));
         }
 
-        public IEnumerable<Client> Clients { get; set; } = new List<Client>();
+        public IEnumerable<Client> Clients { get; private set; } = new List<Client>();
 
-        public VirtualServer VirtualServer { get; set; } = new VirtualServer();
+        public DateTime CollectedAt { get; set; }
+
+        public long CollectionDuration { get; set; }
+
+        public VirtualServer VirtualServer { get; private set; } = new VirtualServer();
 
         public void Dispose()
         {
@@ -62,7 +66,10 @@ namespace TeamSpeak3.Metrics
             }
 
             stopwatch.Stop();
-            collector._logger.LogDebug("Data collected in {Elapsed}ms", stopwatch.ElapsedMilliseconds);
+            collector._logger.LogDebug("Data collected in {ElapsedMilliseconds}ms", stopwatch.ElapsedMilliseconds);
+
+            collector.CollectedAt = DateTime.Now;
+            collector.CollectionDuration = stopwatch.ElapsedMilliseconds;
         }
     }
 }
