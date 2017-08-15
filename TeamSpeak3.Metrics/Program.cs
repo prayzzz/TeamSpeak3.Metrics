@@ -1,17 +1,20 @@
-﻿using System.IO;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
 namespace TeamSpeak3.Metrics
 {
-    public class Program
+    public static class Program
     {
+        private static IWebHost BuildWebHost(string[] args)
+        {
+            return WebHost.CreateDefaultBuilder(args)
+                          .UseStartup<Startup>()
+                          .Build();
+        }
+
         public static void Main(string[] args)
         {
-            new WebHostBuilder().UseKestrel()
-                                 .UseContentRoot(Directory.GetCurrentDirectory())
-                                 .UseStartup<Startup>()
-                                 .Build()
-                                 .Run();
+            BuildWebHost(args).Run();
         }
     }
 }

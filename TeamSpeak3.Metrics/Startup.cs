@@ -1,22 +1,27 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TeamSpeak3.Metrics.Common;
 using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics
 {
+    // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup : StartupBase
     {
         public Startup(IHostingEnvironment env)
         {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                .AddEnvironmentVariables();
+            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
+                                                    .AddJsonFile("appsettings.json", false, true)
+                                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
+                                                    .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
@@ -24,29 +29,25 @@ namespace TeamSpeak3.Metrics
 
         public override void Configure(IApplicationBuilder app)
         {
-            var env = app.ApplicationServices.GetService<IHostingEnvironment>();
-            var loggerFactory = app.ApplicationServices.GetService<ILoggerFactory>();
+            var routeBuilder = new RouteBuilder(app);
+            routeBuilder.MapGet("api/metrics", context =>
+            {
+                var controller = context.RequestServices.GetService<TeamSpeakData>();
+                return context.Response.WriteAsync(controller.Get());
+            });
 
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
-            app.UseMvc();
+            app.UseRouter(routeBuilder.Build());
         }
 
-        public override IServiceProvider ConfigureServices(IServiceCollection services)
+        public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
-            services.AddMvc();
+            services.Configure<AppSettings>(Configuration.GetSection("App"));
 
-            services.AddSingleton<PeriodicDataCollector>();
-            services.AddSingleton(async provider =>
-            {
-                var query = new TeamSpeakQuery(provider.GetService<ILogger<TeamSpeakQuery>>());
-                await query.Connect("192.168.1.10", 10011);
-                await query.Login("admin", "LLwgvOk9");
-                await query.Use(9987);
+            services.AddRouting();
 
-                return query;
-            });
+            services.AddSingleton<TeamSpeakData>();
+            services.AddSingleton<IHostedService, DataRefresher>();
+            services.AddSingleton(provider => new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(provider.GetService<ILogger<TeamSpeakConnection>>())));
 
             return services.BuildServiceProvider();
         }

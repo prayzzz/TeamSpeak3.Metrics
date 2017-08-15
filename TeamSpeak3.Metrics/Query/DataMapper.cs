@@ -2,12 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 
 namespace TeamSpeak3.Metrics.Query
 {
-    public class DataMapper
+    public static class DataMapper
     {
         public static T Map<T>(IEnumerable<Dictionary<string, string>> data)
         {

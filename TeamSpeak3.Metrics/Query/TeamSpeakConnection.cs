@@ -9,19 +9,19 @@ using TelnetClient = PrimS.Telnet.Client;
 
 namespace TeamSpeak3.Metrics.Query
 {
-    public class TeamSpeakQuery : IDisposable
+    public class TeamSpeakConnection : IDisposable
     {
         private const string ClientlistCommand = "clientlist";
         private const string ServerInfoCommand = "serverinfo";
 
-        private readonly ILogger<TeamSpeakQuery> _logger;
+        private readonly ILogger<TeamSpeakConnection> _logger;
 
-        public TeamSpeakQuery(ILogger<TeamSpeakQuery> logger)
+        public TeamSpeakConnection(ILogger<TeamSpeakConnection> logger)
         {
             _logger = logger;
         }
 
-        public TelnetClient TelnetClient { get; private set; }
+        private TelnetClient TelnetClient { get; set; }
 
         public Task<Response<List<Client>>> ClientList()
         {

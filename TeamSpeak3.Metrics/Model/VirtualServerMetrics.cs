@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace TeamSpeak3.Metrics.Controllers
+namespace TeamSpeak3.Metrics.Model
 {
     public class VirtualServerMetrics
     {

@@ -2,7 +2,7 @@
 
 namespace TeamSpeak3.Metrics.Query
 {
-    public class Replacer
+    public static class Replacer
     {
         private static readonly IReadOnlyDictionary<string, string> EscapeChars = new Dictionary<string, string>
         {

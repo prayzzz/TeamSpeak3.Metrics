@@ -13,7 +13,7 @@ namespace TeamSpeak3.Metrics.Test.Query
         public async Task TestClientList()
         {
             using (var server = new TelnetServer())
-            using (var connection = new TeamSpeakQuery(new ConsoleLogger<TeamSpeakQuery>()))
+            using (var connection = new TeamSpeakConnection(new ConsoleLogger<TeamSpeakConnection>()))
             {
                 var isConnected = await connection.Connect(server.Ip, server.Port);
                 if (!isConnected)
@@ -66,7 +66,7 @@ namespace TeamSpeak3.Metrics.Test.Query
         public async Task TestConnect()
         {
             using (var server = new TelnetServer())
-            using (var connection = new TeamSpeakQuery(new ConsoleLogger<TeamSpeakQuery>()))
+            using (var connection = new TeamSpeakConnection(new ConsoleLogger<TeamSpeakConnection>()))
             {
                 var isConnected = await connection.Connect(server.Ip, server.Port);
 
@@ -78,7 +78,7 @@ namespace TeamSpeak3.Metrics.Test.Query
         public async Task TestLogin()
         {
             using (var server = new TelnetServer())
-            using (var connection = new TeamSpeakQuery(new ConsoleLogger<TeamSpeakQuery>()))
+            using (var connection = new TeamSpeakConnection(new ConsoleLogger<TeamSpeakConnection>()))
             {
                 var isConnected = await connection.Connect(server.Ip, server.Port);
                 if (!isConnected)
@@ -99,7 +99,7 @@ namespace TeamSpeak3.Metrics.Test.Query
         public async Task TestUse()
         {
             using (var server = new TelnetServer())
-            using (var connection = new TeamSpeakQuery(new ConsoleLogger<TeamSpeakQuery>()))
+            using (var connection = new TeamSpeakConnection(new ConsoleLogger<TeamSpeakConnection>()))
             {
                 var isConnected = await connection.Connect(server.Ip, server.Port);
                 if (!isConnected)
