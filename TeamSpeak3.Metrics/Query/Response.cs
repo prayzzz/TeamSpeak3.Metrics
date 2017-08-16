@@ -37,7 +37,9 @@ namespace TeamSpeak3.Metrics.Query
 
         public string ErrorMessage { get; private set; } = string.Empty;
 
-        public bool HasError => ErrorId != 0;
+        public bool IsError => ErrorId != 0;
+
+        public bool IsSuccess => ErrorId == 0;
 
         protected static Dictionary<string, string> ExtractData(string objectLine)
         {

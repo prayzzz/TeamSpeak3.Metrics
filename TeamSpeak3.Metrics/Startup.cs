@@ -1,4 +1,6 @@
 ﻿using System;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using TeamSpeak3.Metrics.Common;
 using TeamSpeak3.Metrics.Query;
 
@@ -15,25 +18,22 @@ namespace TeamSpeak3.Metrics
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup : StartupBase
     {
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var builder = new ConfigurationBuilder().SetBasePath(env.ContentRootPath)
-                                                    .AddJsonFile("appsettings.json", false, true)
-                                                    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-                                                    .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
-        private IConfigurationRoot Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         public override void Configure(IApplicationBuilder app)
         {
             var routeBuilder = new RouteBuilder(app);
             routeBuilder.MapGet("api/metrics", context =>
             {
-                var controller = context.RequestServices.GetService<TeamSpeakData>();
-                return context.Response.WriteAsync(controller.Get());
+                var controller = context.RequestServices.GetService<ITeamSpeakMetrics>();
+                var metrics = controller.Metrics;
+
+                return context.Response.WriteAsync(JsonConvert.SerializeObject(metrics));
             });
 
             app.UseRouter(routeBuilder.Build());
@@ -41,15 +41,21 @@ namespace TeamSpeak3.Metrics
 
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
-            services.Configure<AppSettings>(Configuration.GetSection("App"));
+            base.CreateServiceProvider(services);
 
+            services.Configure<AppSettings>(Configuration.GetSection("App"));
             services.AddRouting();
 
-            services.AddSingleton<TeamSpeakData>();
-            services.AddSingleton<IHostedService, DataRefresher>();
-            services.AddSingleton(provider => new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(provider.GetService<ILogger<TeamSpeakConnection>>())));
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterType<TeamSpeakDataService>().As<IHostedService>().As<ITeamSpeakMetrics>().SingleInstance();
+            builder.Register(c =>
+            {
+                var logger = c.Resolve<ILogger<TeamSpeakConnection>>();
+                return new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(logger));
+            }).SingleInstance();
 
-            return services.BuildServiceProvider();
+            return new AutofacServiceProvider(builder.Build());
         }
     }
 }
