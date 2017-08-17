@@ -2,9 +2,9 @@
 {
     public class AppConfiguration
     {
-        public TeamSpeakConfiguration TeamSpeak { get; set; }
-
         public LoggingConfiguration Logging { get; set; }
+
+        public TeamSpeakConfiguration TeamSpeak { get; set; }
     }
 
     public class LoggingConfiguration

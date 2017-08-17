@@ -3,13 +3,12 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using TeamSpeak3.Metrics.Common;
 using TeamSpeak3.Metrics.Query;
 
@@ -18,32 +17,31 @@ namespace TeamSpeak3.Metrics
     // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup : StartupBase
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<Startup> _logger;
 
-        private IConfiguration Configuration { get; }
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        {
+            _configuration = configuration;
+            _logger = logger;
+        }
 
         public override void Configure(IApplicationBuilder app)
         {
-            var routeBuilder = new RouteBuilder(app);
-            routeBuilder.MapGet("api/metrics", context =>
+            app.UseRouter(CreateRouter(app));
+
+            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+            if (serverAddressesFeature != null)
             {
-                var controller = context.RequestServices.GetService<ITeamSpeakMetrics>();
-                var metrics = controller.Metrics;
-
-                return context.Response.WriteAsync(JsonConvert.SerializeObject(metrics));
-            });
-
-            app.UseRouter(routeBuilder.Build());
+                _logger.LogInformation("Application listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
+            }
         }
 
         public override IServiceProvider CreateServiceProvider(IServiceCollection services)
         {
             base.CreateServiceProvider(services);
 
-            services.Configure<AppConfiguration>(Configuration.GetSection("App"));
+            services.Configure<AppConfiguration>(_configuration.GetSection("App"));
             services.AddRouting();
 
             var builder = new ContainerBuilder();
@@ -56,6 +54,14 @@ namespace TeamSpeak3.Metrics
             }).SingleInstance();
 
             return new AutofacServiceProvider(builder.Build());
+        }
+
+        private static IRouter CreateRouter(IApplicationBuilder app)
+        {
+            var builder = new RouteBuilder(app);
+            builder.MapGet("api/metrics", MetricsRequest.Handle);
+
+            return builder.Build();
         }
     }
 }

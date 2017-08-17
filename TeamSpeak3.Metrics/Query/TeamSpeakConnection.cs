@@ -31,17 +31,37 @@ namespace TeamSpeak3.Metrics.Query
         public async Task<bool> Connect(string ip, int port)
         {
             var cancellationToken = new CancellationToken();
-            TelnetClient = new TelnetClient(ip, port, cancellationToken);
+
+            try
+            {
+                TelnetClient = new TelnetClient(ip, port, cancellationToken);
+            }
+            catch (InvalidOperationException e)
+            {
+                _logger.LogWarning(e, "Cannot establish query connection to TeamSpeak-Server at {Ip}:{Port}", ip, port);
+                return false;
+            }
+            catch (Exception)
+            {
+                _logger.LogCritical("Unknown error while establishing query connection to TeamSpeak Server at {Ip}:{Port}", ip, port);
+                return false;
+            }
+
+            if (!TelnetClient.IsConnected)
+            {
+                _logger.LogWarning("Cannot establish query connection to TeamSpeak-Server at {Ip}:{Port}", ip, port);
+                return false;
+            }
 
             // Read welcome message
             await TelnetClient.ReadAsync();
 
-            return TelnetClient.IsConnected;
+            return true;
         }
 
         public void Dispose()
         {
-            TelnetClient.Dispose();
+            TelnetClient?.Dispose();
         }
 
         public Task<Response> Login(string username, string password)
@@ -78,7 +98,7 @@ namespace TeamSpeak3.Metrics.Query
             return new Response<T>(response);
         }
 
-        private async Task<Response> SendAndReceive(string command, bool isPrivate = true)
+        private async Task<Response> SendAndReceive(string command, bool isPrivate = false)
         {
             await TelnetClient.WriteLine(command);
             var response = await TelnetClient.ReadAsync();

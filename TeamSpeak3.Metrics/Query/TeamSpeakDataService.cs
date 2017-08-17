@@ -12,14 +12,16 @@ namespace TeamSpeak3.Metrics.Query
 {
     public interface ITeamSpeakMetrics
     {
+        bool IsError { get; }
+
         VirtualServerMetrics Metrics { get; }
     }
 
     public class TeamSpeakDataService : HostedService, ITeamSpeakMetrics
     {
+        private readonly TeamSpeakConfiguration _configuration;
         private readonly Func<TeamSpeakConnection> _connectionProvider;
         private readonly ILogger<TeamSpeakDataService> _logger;
-        private readonly TeamSpeakConfiguration _configuration;
 
         public TeamSpeakDataService(Func<TeamSpeakConnection> connectionProvider,
                                     IOptions<AppConfiguration> options,
@@ -29,6 +31,8 @@ namespace TeamSpeak3.Metrics.Query
             _connectionProvider = connectionProvider;
             _configuration = options.Value.TeamSpeak;
         }
+
+        public bool IsError { get; private set; }
 
         public VirtualServerMetrics Metrics { get; private set; }
 
@@ -49,7 +53,12 @@ namespace TeamSpeak3.Metrics.Query
             var collectedMetrics = new VirtualServerMetrics();
             using (var teamspeak = _connectionProvider())
             {
-                await teamspeak.Connect(_configuration.Ip, _configuration.QueryPort);
+                if (!await teamspeak.Connect(_configuration.Ip, _configuration.QueryPort))
+                {
+                    IsError = true;
+                    return;
+                }
+
                 await teamspeak.Login(_configuration.QueryUsername, _configuration.QueryPassword);
                 await teamspeak.Use(_configuration.Port);
 
@@ -63,6 +72,7 @@ namespace TeamSpeak3.Metrics.Query
             collectedMetrics.CollectedAt = DateTime.Now;
             collectedMetrics.CollectionDuration = stopwatch.ElapsedMilliseconds;
 
+            IsError = false;
             Metrics = collectedMetrics;
         }
 

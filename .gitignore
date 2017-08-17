@@ -242,12 +242,9 @@ ModelManifest.xml
 
 .vscode/
 
-# FlatMate
+# TeamSpeak3.Metrics
 *.lock
-typings/
 
-/src/FlatMate.Web/wwwroot/css/**/*.css
-/src/FlatMate.Web/wwwroot/js/**/*.js.map
-/src/FlatMate.Web/wwwroot/js/**/*.js
-/src/FlatMate.Web/wwwroot/dist/**/*
-/dist
+**/typings/
+**/dist
+**/log
