@@ -43,7 +43,7 @@ namespace TeamSpeak3.Metrics
         {
             base.CreateServiceProvider(services);
 
-            services.Configure<AppSettings>(Configuration.GetSection("App"));
+            services.Configure<AppConfiguration>(Configuration.GetSection("App"));
             services.AddRouting();
 
             var builder = new ContainerBuilder();

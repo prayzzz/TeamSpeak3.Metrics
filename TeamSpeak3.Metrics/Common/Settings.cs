@@ -1,11 +1,18 @@
 ﻿namespace TeamSpeak3.Metrics.Common
 {
-    public class AppSettings
+    public class AppConfiguration
     {
-        public TeamSpeakSettings TeamSpeak { get; set; }
+        public TeamSpeakConfiguration TeamSpeak { get; set; }
+
+        public LoggingConfiguration Logging { get; set; }
     }
 
-    public class TeamSpeakSettings
+    public class LoggingConfiguration
+    {
+        public string PathFormat { get; set; }
+    }
+
+    public class TeamSpeakConfiguration
     {
         public string Ip { get; set; }
 

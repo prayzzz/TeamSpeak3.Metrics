@@ -19,16 +19,15 @@ namespace TeamSpeak3.Metrics.Query
     {
         private readonly Func<TeamSpeakConnection> _connectionProvider;
         private readonly ILogger<TeamSpeakDataService> _logger;
-        private readonly TeamSpeakSettings _settings;
+        private readonly TeamSpeakConfiguration _configuration;
 
         public TeamSpeakDataService(Func<TeamSpeakConnection> connectionProvider,
-                                    IOptions<AppSettings> options,
-                                    ILoggerFactory factory,
+                                    IOptions<AppConfiguration> options,
                                     ILogger<TeamSpeakDataService> logger)
         {
-            _logger = factory.CreateLogger<TeamSpeakDataService>();
+            _logger = logger;
             _connectionProvider = connectionProvider;
-            _settings = options.Value.TeamSpeak;
+            _configuration = options.Value.TeamSpeak;
         }
 
         public VirtualServerMetrics Metrics { get; private set; }
@@ -50,9 +49,9 @@ namespace TeamSpeak3.Metrics.Query
             var collectedMetrics = new VirtualServerMetrics();
             using (var teamspeak = _connectionProvider())
             {
-                await teamspeak.Connect(_settings.Ip, _settings.QueryPort);
-                await teamspeak.Login(_settings.QueryUsername, _settings.QueryPassword);
-                await teamspeak.Use(_settings.Port);
+                await teamspeak.Connect(_configuration.Ip, _configuration.QueryPort);
+                await teamspeak.Login(_configuration.QueryUsername, _configuration.QueryPassword);
+                await teamspeak.Use(_configuration.Port);
 
                 await CollectClientList(teamspeak, collectedMetrics);
                 await CollectServerInfo(teamspeak, collectedMetrics);

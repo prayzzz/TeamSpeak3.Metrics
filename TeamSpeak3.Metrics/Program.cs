@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Core;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
+using TeamSpeak3.Metrics.Common;
 
 namespace TeamSpeak3.Metrics
 {
@@ -32,21 +34,41 @@ namespace TeamSpeak3.Metrics
 
         private static void ConfigureLogging(WebHostBuilderContext context, ILoggingBuilder builder)
         {
-            var logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.LiterateConsole(LogEventLevel.Information).WriteTo.Trace(LogEventLevel.Debug).CreateLogger();
+            var configuration = context.Configuration.GetSection("Logging").Get<LoggingConfiguration>();
 
-            builder.SetMinimumLevel(LogLevel.Debug);
-            builder.AddFilter((category, level) =>
+            // Enable all logs
+            builder.SetMinimumLevel(LogLevel.Trace);
+
+            Logger logger;
+            if (!context.HostingEnvironment.IsProduction())
             {
-                // hide debug logs from framework
-                if (level == LogLevel.Debug &&
-                    (category.StartsWith("Microsoft", StringComparison.CurrentCultureIgnoreCase) ||
-                    category.StartsWith("System", StringComparison.CurrentCultureIgnoreCase)))
-                {
-                    return false;
-                }
+                logger = new LoggerConfiguration().MinimumLevel.Debug()
+                                                  .Enrich.FromLogContext()
+                                                  .WriteTo.LiterateConsole(LogEventLevel.Information)
+                                                  .WriteTo.Trace(LogEventLevel.Debug)
+                                                  .CreateLogger();
+            }
+            else
+            {
+                logger = new LoggerConfiguration().MinimumLevel.Information()
+                                                  .Enrich.FromLogContext()
+                                                  .WriteTo.LiterateConsole()
+                                                  .WriteTo.RollingFile(configuration.PathFormat, retainedFileCountLimit: 7)
+                                                  .CreateLogger();
+            }
+            
+            //builder.AddFilter((category, level) =>
+            //{
+            //    // hide debug logs from framework
+            //    if (level == LogLevel.Debug &&
+            //        (category.StartsWith("Microsoft", StringComparison.CurrentCultureIgnoreCase) ||
+            //        category.StartsWith("System", StringComparison.CurrentCultureIgnoreCase)))
+            //    {
+            //        return false;
+            //    }
 
-                return true;
-            });
+            //    return true;
+            //});
 
             builder.AddProvider(new SerilogLoggerProvider(logger));
         }
