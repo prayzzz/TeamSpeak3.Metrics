@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamSpeak3.Metrics", "TeamSpeak3.Metrics\TeamSpeak3.Metrics.csproj", "{3146CF95-F2C3-4F31-AFE7-5076FD0A2CF6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamSpeak3.Metrics", "src\TeamSpeak3.Metrics\TeamSpeak3.Metrics.csproj", "{3146CF95-F2C3-4F31-AFE7-5076FD0A2CF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamSpeak3.Metrics.Test", "TeamSpeak3.Metrics.Test\TeamSpeak3.Metrics.Test.csproj", "{9188B9C1-C4DD-499B-A7EB-BD38BA1C4194}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamSpeak3.Metrics.Test", "test\TeamSpeak3.Metrics.Test\TeamSpeak3.Metrics.Test.csproj", "{9188B9C1-C4DD-499B-A7EB-BD38BA1C4194}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
