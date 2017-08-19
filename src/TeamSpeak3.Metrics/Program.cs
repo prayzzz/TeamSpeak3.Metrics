@@ -11,7 +11,12 @@ namespace TeamSpeak3.Metrics
     {
         public static void Main(string[] args)
         {
+            var hostConfig = new ConfigurationBuilder()
+                .AddCommandLine(args)
+                .Build();
+
             new WebHostBuilder().UseKestrel()
+                                .UseConfiguration(hostConfig)
                                 .UseContentRoot(Directory.GetCurrentDirectory())
                                 .ConfigureAppConfiguration(ConfigureConfiguration)
                                 .ConfigureLogging(ConfigureLogging)
