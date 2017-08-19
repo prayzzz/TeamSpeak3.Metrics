@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Extensions.Logging;
 
 namespace TeamSpeak3.Metrics
 {
@@ -42,7 +41,7 @@ namespace TeamSpeak3.Metrics
                                                   .Configuration(context.Configuration)
                                                   .CreateLogger();
 
-            builder.AddProvider(new SerilogLoggerProvider(logger));
+            builder.AddSerilog(logger);
         }
     }
 }
