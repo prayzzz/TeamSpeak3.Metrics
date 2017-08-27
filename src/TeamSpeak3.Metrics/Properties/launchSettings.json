@@ -6,15 +6,7 @@
       "launchUrl": "api/metrics",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "http://localhost:5002"
-    },
-    "Production": {
-      "commandName": "Project",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Production"
-      },
-      "applicationUrl": "http://localhost:5002"
+      }
     }
   }
 }

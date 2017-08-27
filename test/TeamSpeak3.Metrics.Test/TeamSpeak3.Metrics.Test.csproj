@@ -1,17 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <Import Project="..\..\build\common.props" />
+  
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Version>2000.01.01.0000-dev</Version>
   </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="1.2.0-beta3" />
     <PackageReference Include="MSTest.TestFramework" Version="1.2.0-beta3" />
-    <PackageReference Include="prayzzz.Common.Test" Version="1.0.0-ci-42" />
+    <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-dev" />
   </ItemGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\..\src\TeamSpeak3.Metrics\TeamSpeak3.Metrics.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
-  </ItemGroup>
+  
 </Project>
