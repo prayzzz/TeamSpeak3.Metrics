@@ -1,5 +1,4 @@
-﻿using System;
-using Autofac;
+﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,12 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System;
 using TeamSpeak3.Metrics.Common;
 using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics
 {
-    // ReSharper disable once ClassNeverInstantiated.Global
     public class Startup : StartupBase
     {
         private readonly IConfiguration _configuration;

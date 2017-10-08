@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics.Test.Query

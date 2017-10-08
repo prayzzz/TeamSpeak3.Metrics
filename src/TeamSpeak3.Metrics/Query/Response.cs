@@ -9,9 +9,7 @@ namespace TeamSpeak3.Metrics.Query
     {
         public Response(string response) : base(response)
         {
-            var data = response.Split('|')
-                               .Select(s => ExtractData(s));
-
+            var data = response.Split('|').Select(ExtractData);
             Data = DataMapper.Map<T>(data);
         }
 
@@ -22,15 +20,14 @@ namespace TeamSpeak3.Metrics.Query
     {
         public const string NewLine = "\n\r";
 
-        private static readonly string[] Separator = { NewLine };
-
         private static readonly Regex KeyValuePattern = new Regex(@"(?<key>\w+)=(?<value>.+)");
+        private static readonly string[] Separator = { NewLine };
 
         public Response(string response)
         {
             var lines = response.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 
-            MapErrorLine(lines.FirstOrDefault(l => l.StartsWith("error")));
+            MapErrorLine(Array.Find(lines, l => l.StartsWith("error")));
         }
 
         public int ErrorId { get; private set; } = -1;
@@ -69,12 +66,9 @@ namespace TeamSpeak3.Metrics.Query
 
             var data = ExtractData(errorLine);
 
-            if (data.TryGetValue("id", out var errorIdString))
+            if (data.TryGetValue("id", out var errorIdString) && int.TryParse(errorIdString, out var errorId))
             {
-                if (int.TryParse(errorIdString, out var errorId))
-                {
-                    ErrorId = errorId;
-                }
+                ErrorId = errorId;
             }
 
             if (data.TryGetValue("msg", out var msg))

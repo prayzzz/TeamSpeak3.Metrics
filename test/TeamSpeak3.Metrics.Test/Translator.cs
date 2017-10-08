@@ -11,7 +11,7 @@ namespace TeamSpeak3.Metrics.Test
 
             foreach (var pair in data)
             {
-                builder.Append($"{pair.Key}={pair.Value} ");
+                builder.Append(pair.Key).Append("=").Append(pair.Value).Append(" ");
             }
 
             return builder.ToString().Trim();
@@ -23,7 +23,7 @@ namespace TeamSpeak3.Metrics.Test
 
             foreach (var data in dataList)
             {
-                builder.Append($"{Translate(data)}|");
+                builder.Append(Translate(data)).Append("|");
             }
 
             return builder.ToString().Trim('|');
