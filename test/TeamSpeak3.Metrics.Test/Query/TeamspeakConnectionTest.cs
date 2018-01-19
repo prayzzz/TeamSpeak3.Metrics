@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using prayzzz.Common.Unit;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using prayzzz.Common.Unit;
 using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics.Test.Query

@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System;
+using System.Threading.Tasks;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
 using TeamSpeak3.Metrics.Common;
 using TeamSpeak3.Metrics.Query;
 
@@ -58,6 +59,12 @@ namespace TeamSpeak3.Metrics
         private static IRouter CreateRouter(IApplicationBuilder app)
         {
             var builder = new RouteBuilder(app);
+            builder.MapGet("", context =>
+            {
+                context.Response.Redirect("/api/metrics");
+                return Task.CompletedTask;
+            });
+
             builder.MapGet("api/metrics", MetricsRequest.Handle);
 
             return builder.Build();

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using System.Threading.Tasks;
 using TeamSpeak3.Metrics.Query;
 
 namespace TeamSpeak3.Metrics

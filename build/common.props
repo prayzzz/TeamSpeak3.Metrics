@@ -3,6 +3,5 @@
     <Product>TeamSpeak3.Metrics</Product>
     <RepositoryUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <CodeAnalysisRuleSet>..\..\TeamSpeak3.Metrics.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>  
 </Project>

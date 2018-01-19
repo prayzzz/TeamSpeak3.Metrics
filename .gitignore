@@ -242,6 +242,10 @@ ModelManifest.xml
 
 .vscode/
 
+# Rider
+
+.idea/
+
 # TeamSpeak3.Metrics
 *.lock
 
