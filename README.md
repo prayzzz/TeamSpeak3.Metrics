@@ -8,18 +8,18 @@
 
 ```json
 {
-    BytesReceived: 365148648,
-    BytesSent: 660032568,
-    Clients: [
+    "BytesReceived": 365148648,
+    "BytesSent": 660032568,
+    "Clients": [
     ],
-    ClientsOnline: 1,
-    CollectedAt: "2018-03-04T16:19:23.310556+01:00",
-    CollectionDuration: 223,
-    ServerId: 1,
-    ServerName: "russianbee",
-    Status: "online",
-    TotalPing: 0,
-    Uptime: "1879236"
+    "ClientsOnline": 1,
+    "CollectedAt": "2018-03-04T16:19:23.310556+01:00",
+    "CollectionDuration": 223,
+    "ServerId": 1,
+    "ServerName": "russianbee",
+    "Status": "online",
+    "TotalPing": 0,
+    "Uptime": "1879236"
 }
 ```
 
