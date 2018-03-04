@@ -103,7 +103,7 @@ namespace TeamSpeak3.Metrics.Query
                 collectedMetrics.ServerName = response.Data.VirtualServerName;
                 collectedMetrics.Status = response.Data.VirtualServerStatus;
                 collectedMetrics.TotalPing = response.Data.VirtualServerTotalPing;
-                collectedMetrics.Uptime = response.Data.VirtualServerUptime;
+                collectedMetrics.Uptime = long.Parse(response.Data.VirtualServerUptime);
             }
             else
             {
