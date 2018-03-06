@@ -6,10 +6,10 @@
     <Version>2000.01.01.0000-dev</Version>
   </PropertyGroup>
   <ItemGroup>
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0"/>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.6.0"/>
       <PackageReference Include="MSTest.TestAdapter" Version="1.2.0"/>
       <PackageReference Include="MSTest.TestFramework" Version="1.2.0"/>
-      <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-unstable-41.develop"/>
+      <PackageReference Include="prayzzz.Common.Unit" Version="1.0.0-unstable-46.develop"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\TeamSpeak3.Metrics\TeamSpeak3.Metrics.csproj" />
