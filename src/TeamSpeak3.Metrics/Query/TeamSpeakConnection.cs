@@ -54,7 +54,11 @@ namespace TeamSpeak3.Metrics.Query
             }
 
             // Read welcome message
-            await TelnetClient.ReadAsync();
+            var response = string.Empty;
+            while (string.IsNullOrEmpty(response))
+            {
+                response = (await TelnetClient.ReadAsync()).Trim();
+            }
 
             return true;
         }
@@ -86,7 +90,12 @@ namespace TeamSpeak3.Metrics.Query
         private async Task<Response<T>> SendAndReceive<T>(string command, bool isPrivate = false) where T : new()
         {
             await TelnetClient.WriteLine(command);
-            var response = await TelnetClient.ReadAsync();
+
+            var response = string.Empty;
+            while (string.IsNullOrEmpty(response))
+            {
+                response = (await TelnetClient.ReadAsync()).Trim();
+            }
 
             if (isPrivate)
             {

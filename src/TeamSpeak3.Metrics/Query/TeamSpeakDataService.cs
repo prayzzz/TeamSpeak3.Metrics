@@ -48,7 +48,7 @@ namespace TeamSpeak3.Metrics.Query
                 }
                 catch (Exception e)
                 {
-                    Logger.LogError($"Collect failed: {e.Message}", e);
+                    Logger.LogError(e, $"Collect failed: {e.Message}");
                 }
 
                 await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
@@ -72,11 +72,8 @@ namespace TeamSpeak3.Metrics.Query
                 await teamspeak.Login(_configuration.QueryUsername, _configuration.QueryPassword);
                 await teamspeak.Use(_configuration.Port);
 
-                var collectClientListTask = CollectClientList(teamspeak, collectedMetrics);
-                var collectServerInfoTask = CollectServerInfo(teamspeak, collectedMetrics);
-
-                await collectClientListTask;
-                await collectServerInfoTask;
+                await CollectClientList(teamspeak, collectedMetrics);
+                await CollectServerInfo(teamspeak, collectedMetrics);
             }
 
             stopwatch.Stop();
@@ -116,7 +113,15 @@ namespace TeamSpeak3.Metrics.Query
                 collectedMetrics.ServerName = response.Data.VirtualServerName;
                 collectedMetrics.Status = response.Data.VirtualServerStatus;
                 collectedMetrics.TotalPing = response.Data.VirtualServerTotalPing;
-                collectedMetrics.Uptime = long.Parse(response.Data.VirtualServerUptime);
+
+                if (!string.IsNullOrEmpty(response.Data.VirtualServerUptime))
+                {
+                    collectedMetrics.Uptime = long.Parse(response.Data.VirtualServerUptime);
+                }
+                else
+                {
+                    _logger.LogInformation("Uptimer: " + response.Data.VirtualServerUptime);
+                }
             }
             else
             {
