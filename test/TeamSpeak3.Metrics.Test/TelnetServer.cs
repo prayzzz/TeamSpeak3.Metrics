@@ -48,6 +48,7 @@ namespace TeamSpeak3.Metrics.Test
             socket.Listen(10);
 
             var handler = socket.Accept();
+            handler.Send(Encoding.ASCII.GetBytes("Hello"));
 
             _isRunning = true;
             while (_isRunning)
