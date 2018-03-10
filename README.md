@@ -29,6 +29,9 @@
 * set environment variables
 
 ```
+TeamSpeak3Metrics_App__TeamSpeak__Ip=
+TeamSpeak3Metrics_App__TeamSpeak__Port=
+TeamSpeak3Metrics_App__TeamSpeak__QueryPort=
 TeamSpeak3Metrics_App__TeamSpeak__QueryUsername=
 TeamSpeak3Metrics_App__TeamSpeak__QueryPassword=
 ```

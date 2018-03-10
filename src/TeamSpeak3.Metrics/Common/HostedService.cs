@@ -1,6 +1,8 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace TeamSpeak3.Metrics.Common
 {
@@ -8,6 +10,8 @@ namespace TeamSpeak3.Metrics.Common
     {
         private CancellationTokenSource _cts;
         private Task _executingTask;
+
+        protected abstract ILogger Logger { get; }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {

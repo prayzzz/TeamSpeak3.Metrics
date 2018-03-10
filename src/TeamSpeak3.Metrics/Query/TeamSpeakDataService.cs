@@ -36,11 +36,21 @@ namespace TeamSpeak3.Metrics.Query
 
         public VirtualServerMetrics Metrics { get; private set; }
 
+        protected override ILogger Logger => _logger;
+
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                await Collect();
+                try
+                {
+                    await Collect();
+                }
+                catch (Exception e)
+                {
+                    Logger.LogError($"Collect failed: {e.Message}", e);
+                }
+
                 await Task.Delay(TimeSpan.FromSeconds(30), cancellationToken);
             }
         }
@@ -62,8 +72,11 @@ namespace TeamSpeak3.Metrics.Query
                 await teamspeak.Login(_configuration.QueryUsername, _configuration.QueryPassword);
                 await teamspeak.Use(_configuration.Port);
 
-                await CollectClientList(teamspeak, collectedMetrics);
-                await CollectServerInfo(teamspeak, collectedMetrics);
+                var collectClientListTask = CollectClientList(teamspeak, collectedMetrics);
+                var collectServerInfoTask = CollectServerInfo(teamspeak, collectedMetrics);
+
+                await collectClientListTask;
+                await collectServerInfoTask;
             }
 
             stopwatch.Stop();
