@@ -11,11 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TeamSpeak3.Metrics.Common;
+using TeamSpeak3.Metrics.Extensions;
 using TeamSpeak3.Metrics.Query;
+using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
 
 namespace TeamSpeak3.Metrics
 {
-    public class Startup : StartupBase
+    public class Startup : IStartup
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<Startup> _logger;
@@ -26,21 +28,15 @@ namespace TeamSpeak3.Metrics
             _logger = logger;
         }
 
-        public override void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
+            app.LogServerAddresses(_logger);
+            
             app.UseRouter(CreateRouter(app));
-
-            var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
-            if (serverAddressesFeature != null)
-            {
-                _logger.LogInformation("Application listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
-            }
         }
 
-        public override IServiceProvider CreateServiceProvider(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            base.CreateServiceProvider(services);
-
             services.Configure<AppConfiguration>(_configuration.GetSection("App"));
             services.AddRouting();
 

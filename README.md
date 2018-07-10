@@ -1,8 +1,10 @@
 # Teamspeak3.Metrics
 
-## Requirements
+Exposes metrics from your Teamspeak3 Server.
 
-* .NET Core 2.0 SDK
+## Runtime Requirements
+
+* Teamspeak3 Server
 
 ## Output
 
@@ -23,6 +25,9 @@
 }
 ```
 
+## Development Requirements
+
+* .NET Core 2.1 SDK
 
 ## Dev Setup
 
