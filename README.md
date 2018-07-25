@@ -6,7 +6,52 @@ Exposes metrics from your Teamspeak3 Server.
 
 * Teamspeak3 Server
 
-## Output
+## Usage
+
+* Run
+```
+./teamspeak3.metrics
+```
+* Overwrite default appsettings
+```
+./teamspeak3.metrics my-settings.json
+```
+
+### Sample settings
+```json
+{
+  "Kestrel": {
+    "EndPoints": {
+      "Http": {
+        "Url": "http://localhost:1234"
+      }
+    }
+  },
+  "App": {
+    "TeamSpeak": {    
+      "Host": "127.0.0.1",
+      "QueryUsername": "",
+      "QueryPassword": ""
+    }
+  },
+  "Serilog": {
+    "WriteTo": [
+      {
+        "Name": "LiterateConsole"
+      },
+      {
+        "Name": "RollingFile",
+        "Args": {
+          "pathFormat": "../logs/teamspeak3-metrics-{Date}.txt",
+          "buffered": true
+        }
+      }
+    ]
+  }
+}
+```
+
+### Output
 
 ```json
 {
@@ -23,20 +68,4 @@ Exposes metrics from your Teamspeak3 Server.
     "TotalPing": 0,
     "Uptime": "1879236"
 }
-```
-
-## Development Requirements
-
-* .NET Core 2.1 SDK
-
-## Dev Setup
-
-* set environment variables
-
-```
-TeamSpeak3Metrics_App__TeamSpeak__Ip=
-TeamSpeak3Metrics_App__TeamSpeak__Port=
-TeamSpeak3Metrics_App__TeamSpeak__QueryPort=
-TeamSpeak3Metrics_App__TeamSpeak__QueryUsername=
-TeamSpeak3Metrics_App__TeamSpeak__QueryPassword=
 ```

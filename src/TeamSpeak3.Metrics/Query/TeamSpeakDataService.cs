@@ -63,7 +63,7 @@ namespace TeamSpeak3.Metrics.Query
             var collectedMetrics = new VirtualServerMetrics();
             using (var teamspeak = _connectionProvider())
             {
-                if (!await teamspeak.Connect(_configuration.Ip, _configuration.QueryPort))
+                if (!await teamspeak.Connect(_configuration.Host, _configuration.QueryPort))
                 {
                     IsError = true;
                     return;
