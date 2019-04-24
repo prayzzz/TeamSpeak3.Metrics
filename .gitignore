@@ -4,3 +4,5 @@
 [Oo]bj/
 
 appsettings.development.json
+
+*.DotSettings.user
