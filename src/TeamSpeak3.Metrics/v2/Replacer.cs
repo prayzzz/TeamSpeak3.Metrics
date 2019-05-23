@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace TeamSpeak3.Metrics.Query
+namespace TeamSpeak3.Metrics.v2
 {
     public static class Replacer
     {
@@ -13,9 +13,9 @@ namespace TeamSpeak3.Metrics.Query
 
         public static string Replace(string value)
         {
-            foreach (var escapePair in EscapeChars)
+            foreach (var (oldValue, newValue) in EscapeChars)
             {
-                value = value.Replace(escapePair.Key, escapePair.Value);
+                value = value.Replace(oldValue, newValue);
             }
 
             return value;

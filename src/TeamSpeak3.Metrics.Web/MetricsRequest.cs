@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using TeamSpeak3.Metrics.Query;
+using TeamSpeak3.Metrics.Web.Services;
 
-namespace TeamSpeak3.Metrics
+namespace TeamSpeak3.Metrics.Web
 {
     public static class MetricsRequest
     {

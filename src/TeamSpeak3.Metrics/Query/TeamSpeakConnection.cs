@@ -13,17 +13,18 @@ namespace TeamSpeak3.Metrics.Query
     {
         private const string ClientlistCommand = "clientlist";
         private const string ServerInfoCommand = "serverinfo";
+        private const string ServerListCommand = "serverlist";
 
-        private readonly ILogger<TeamSpeakConnection> _logger;
+        private readonly ILogger _logger;
 
-        public TeamSpeakConnection(ILogger<TeamSpeakConnection> logger)
+        public TeamSpeakConnection(ILogger logger)
         {
             _logger = logger;
         }
 
         private TelnetClient TelnetClient { get; set; }
 
-        public Task<Response<List<Client>>> ClientList()
+        internal Task<QueryResponse<List<Client>>> ClientList()
         {
             return SendAndReceive<List<Client>>(ClientlistCommand);
         }
@@ -68,26 +69,31 @@ namespace TeamSpeak3.Metrics.Query
             TelnetClient?.Dispose();
         }
 
-        public Task<Response> Login(string username, string password)
+        internal Task<QueryResponse> Login(string username, string password)
         {
             var command = $"login {username} {password}";
 
             return SendAndReceive(command, true);
         }
 
-        public Task<Response<VirtualServer>> ServerInfo()
+        internal Task<QueryResponse<VirtualServerInfo>> ServerInfo()
         {
-            return SendAndReceive<VirtualServer>(ServerInfoCommand);
+            return SendAndReceive<VirtualServerInfo>(ServerInfoCommand);
         }
 
-        public Task<Response> Use(int port)
+        internal Task<QueryResponse<List<VirtualServer>>> ServerList()
+        {
+            return SendAndReceive<List<VirtualServer>>(ServerListCommand);
+        }
+
+        internal Task<QueryResponse> Use(int port)
         {
             var command = $"use port={port}";
 
             return SendAndReceive(command);
         }
 
-        private async Task<Response<T>> SendAndReceive<T>(string command, bool isPrivate = false) where T : new()
+        private async Task<QueryResponse<T>> SendAndReceive<T>(string command, bool isPrivate = false) where T : new()
         {
             await TelnetClient.WriteLine(command);
 
@@ -104,10 +110,10 @@ namespace TeamSpeak3.Metrics.Query
 
             _logger.LogDebug("Executed {Command}. Received {Response}", command, response);
 
-            return new Response<T>(response);
+            return new QueryResponse<T>(response);
         }
 
-        private async Task<Response> SendAndReceive(string command, bool isPrivate = false)
+        private async Task<QueryResponse> SendAndReceive(string command, bool isPrivate = false)
         {
             await TelnetClient.WriteLine(command);
             var response = await TelnetClient.ReadAsync();
@@ -119,7 +125,7 @@ namespace TeamSpeak3.Metrics.Query
 
             _logger.LogDebug("Executed {Command}. Received {Response}", command, response.Trim());
 
-            return new Response(response);
+            return new QueryResponse(response);
         }
     }
 }

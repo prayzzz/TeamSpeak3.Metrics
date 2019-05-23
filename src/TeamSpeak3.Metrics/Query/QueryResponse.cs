@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using TeamSpeak3.Metrics.v2;
 
 namespace TeamSpeak3.Metrics.Query
 {
-    public class Response<T> : Response where T : new()
+    internal class QueryResponse<T> : QueryResponse where T : new()
     {
-        public Response(string response) : base(response)
+        public QueryResponse(string response) : base(response)
         {
             var data = response.Split('|').Select(ExtractData);
             Data = DataMapper.Map<T>(data);
@@ -16,14 +17,14 @@ namespace TeamSpeak3.Metrics.Query
         public T Data { get; }
     }
 
-    public class Response
+    internal class QueryResponse
     {
         public const string NewLine = "\n\r";
 
         private static readonly Regex KeyValuePattern = new Regex(@"(?<key>\w+)=(?<value>.+)");
         private static readonly string[] Separator = { NewLine };
 
-        public Response(string response)
+        public QueryResponse(string response)
         {
             var lines = response.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 

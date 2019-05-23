@@ -1,7 +1,3 @@
 <Project>
-  <PropertyGroup>
-    <Product>TeamSpeak3.Metrics</Product>
-    <RepositoryUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</RepositoryUrl>
-    <RepositoryType>git</RepositoryType>
-  </PropertyGroup>  
+
 </Project>

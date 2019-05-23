@@ -15,8 +15,6 @@ namespace TeamSpeak3.Metrics.Model
 
         public DateTime CollectedAt { get; set; }
 
-        public long CollectionDuration { get; set; }
-
         public long ServerId { get; set; }
 
         public string ServerName { get; set; }

@@ -4,18 +4,17 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TeamSpeak3.Metrics.Common;
-using TeamSpeak3.Metrics.Extensions;
 using TeamSpeak3.Metrics.Query;
-using IApplicationLifetime = Microsoft.AspNetCore.Hosting.IApplicationLifetime;
+using TeamSpeak3.Metrics.Web.Configuration;
+using TeamSpeak3.Metrics.Web.Extensions;
+using TeamSpeak3.Metrics.Web.Services;
 
-namespace TeamSpeak3.Metrics
+namespace TeamSpeak3.Metrics.Web
 {
     public class Startup : IStartup
     {

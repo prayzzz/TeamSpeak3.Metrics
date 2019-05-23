@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace TeamSpeak3.Metrics.Extensions
+namespace TeamSpeak3.Metrics.Web.Extensions
 {
     public static class ApplicationBuilderExtensions
     {

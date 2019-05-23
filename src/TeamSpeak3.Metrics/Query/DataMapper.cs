@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using TeamSpeak3.Metrics.v2;
 
 namespace TeamSpeak3.Metrics.Query
 {
