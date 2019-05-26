@@ -9,8 +9,7 @@ namespace TeamSpeak3.Metrics.v2
     public static class Parser
     {
         private static readonly Regex BooleanResponseRegex = new Regex("id=(?<id>[0-9]+) msg=(?<msg>.+)");
-
-        private static readonly Dictionary<Type, IEnumerable<ConstructorInfo>> TypeInfos = new Dictionary<Type, IEnumerable<ConstructorInfo>>();
+        private static readonly Dictionary<Type, IEnumerable<PropertyInfo>> Setters = new Dictionary<Type, IEnumerable<PropertyInfo>>();
 
         public static BooleanResponse ToBooleanResponse(string response)
         {
@@ -28,59 +27,39 @@ namespace TeamSpeak3.Metrics.v2
             return new BooleanResponse(int.Parse(match.Groups["id"].Value), match.Groups["msg"].Value);
         }
 
-        public static IEnumerable<T> ToData<T>(string response)
+        public static IEnumerable<T> ToData<T>(string response) where T : new()
         {
             var items = response.Trim().Split("|");
-
-            var typeInfo = TypeInfos.ComputeIfAbsent(typeof(T), t => t.GetConstructors().ToList());
-
-            return items.Select(x => Parse<T>(typeInfo, x));
+            return items.Select(x => Parse<T>(x));
         }
 
-        private static T Parse<T>(IEnumerable<ConstructorInfo> constructors, string item)
+        private static T Parse<T>(string item) where T : new()
         {
+            var obj = new T();
+            var parameters = new object[] { null };
+
+            var setters = Setters.ComputeIfAbsent(typeof(T), t => t.GetProperties().ToList());
+
             var strings = item.Trim().Split(" ");
-            var dict = strings.ToDictionary(x => x.Split("=")[0].ToLower(), x => Replacer.Replace(x.Split("=")[1]));
-
-            foreach (var constructorInfo in constructors)
-            {
-                var p = GetParameters(constructorInfo, dict);
-                if (p != null)
-                {
-                    return (T) constructorInfo.Invoke(p.ToArray());
-                }
-            }
-
-            throw new Exception($"Couldn't create {typeof(T).Name}");
-        }
-
-        private static List<object> GetParameters(ConstructorInfo constructorInfo, Dictionary<string, string> dict)
-        {
-            var values = new List<object>();
+            var dict = strings.ToDictionary(x => x.Split("=")[0], x => Replacer.Replace(x.Split("=")[1]));
 
             foreach (var (name, value) in dict)
             {
-                foreach (var parameter in constructorInfo.GetParameters())
+                foreach (var setter in setters)
                 {
-                    if (parameter.IsMatch(name))
+                    if (setter.IsMatch(name))
                     {
-                        values.Add(value);
+                        parameters[0] = value;
+                        setter.GetSetMethod().Invoke(obj, parameters);
+                        break;
                     }
                 }
             }
 
-            if (values.Count == constructorInfo.GetParameters().Length)
-            {
-                return values;
-            }
-
-            return null;
+            return obj;
         }
-    }
 
-    public static class Exteions
-    {
-        public static bool IsMatch(this ParameterInfo parameter, string name)
+        private static bool IsMatch(this MemberInfo parameter, string name)
         {
             var name1 = name;
             var name2 = name.Replace("_", "").Replace("-", "");

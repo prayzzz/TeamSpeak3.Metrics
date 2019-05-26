@@ -40,14 +40,15 @@ namespace TeamSpeak3.Metrics.v2
             }
         }
 
-        public async Task<ServerInfo> GetServerInfo()
+        public async Task<ServerInfo> GetServerInfo(int virtualServerPort)
         {
             using (var connection = await _factory.Create(_config.Host, _config.QueryPort))
             {
-                var response = await connection.SendAndReceive(ServerInfoCommand);
+                await Login(connection);
+                await SelectVirtualServer(virtualServerPort, connection);
 
-                // TODO mapping
-                return new ServerInfo();
+                var response = await connection.SendAndReceive(ServerInfoCommand);
+                return Parser.ToData<ServerInfo>(response).FirstOrDefault();
             }
         }
 
@@ -55,10 +56,10 @@ namespace TeamSpeak3.Metrics.v2
         {
             using (var connection = await _factory.Create(_config.Host, _config.QueryPort))
             {
-                var response = await connection.SendAndReceive(ServerListCommand);
+                await Login(connection);
 
-                // TODO mapping
-                return Enumerable.Empty<Server>();
+                var response = await connection.SendAndReceive(ServerListCommand);
+                return Parser.ToData<Server>(response);
             }
         }
 

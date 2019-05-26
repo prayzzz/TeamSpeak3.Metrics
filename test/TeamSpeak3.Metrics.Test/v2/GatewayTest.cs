@@ -67,5 +67,31 @@ namespace TeamSpeak3.Metrics.Test.v2
             // Assert
             Assert.AreEqual("Couldn't login with query credentials 'invalid loginname or password'", result.Message);
         }
+        
+        [TestMethod]
+        public async Task GetServerInfo()
+        {
+            const int vServerPort = 4242;
+
+            var logger = new ConsoleLogger<Gateway>();
+            var connection = TH.CreateMock<IQueryConnection>();
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
+
+            connection.Setup(x => x.SendAndReceive($"login {ServerConfiguration.QueryUsername} {ServerConfiguration.QueryPassword}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive($"use port={vServerPort}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive("clientlist"))
+                      .ReturnsAsync("ConnectionBytesReceivedTotal=100");
+            connection.Setup(x => x.Dispose());
+
+            // Act
+            var gateway = new Gateway(factory.Object, logger, ServerConfiguration);
+            var result = await gateway.GetClientList(vServerPort);
+
+            // Assert
+            // TODO
+        }
     }
 }
