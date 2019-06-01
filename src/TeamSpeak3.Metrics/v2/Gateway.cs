@@ -12,14 +12,10 @@ namespace TeamSpeak3.Metrics.v2
         private const string ClientlistCommand = "clientlist";
         private const string ServerInfoCommand = "serverinfo";
         private const string ServerListCommand = "serverlist";
-
-        private const string NewLine = "\n\r";
-
-        private static readonly string[] Separator = { NewLine };
+        private readonly ServerConfiguration _config;
 
         private readonly IQueryConnectionFactory _factory;
         private readonly ILogger<Gateway> _logger;
-        private readonly ServerConfiguration _config;
 
         public Gateway(IQueryConnectionFactory factory, ILogger<Gateway> logger, ServerConfiguration config)
         {
@@ -63,16 +59,6 @@ namespace TeamSpeak3.Metrics.v2
             }
         }
 
-        private async Task SelectVirtualServer(int vServerPort, IQueryConnection connection)
-        {
-            var command = $"use port={vServerPort}";
-            var useResponse = Parser.ToBooleanResponse(await connection.SendAndReceive(command));
-            if (!useResponse.IsSuccess)
-            {
-                throw new Exception($"Couldn't select Server: '{useResponse.Message}'");
-            }
-        }
-
         private async Task Login(IQueryConnection connection)
         {
             var loginCmd = $"login {_config.QueryUsername} {_config.QueryPassword}";
@@ -80,6 +66,16 @@ namespace TeamSpeak3.Metrics.v2
             if (!loginResponse.IsSuccess)
             {
                 throw new Exception($"Couldn't login with query credentials '{loginResponse.Message}'");
+            }
+        }
+
+        private async Task SelectVirtualServer(int vServerPort, IQueryConnection connection)
+        {
+            var command = $"use port={vServerPort}";
+            var useResponse = Parser.ToBooleanResponse(await connection.SendAndReceive(command));
+            if (!useResponse.IsSuccess)
+            {
+                throw new Exception($"Couldn't select Server: '{useResponse.Message}'");
             }
         }
     }

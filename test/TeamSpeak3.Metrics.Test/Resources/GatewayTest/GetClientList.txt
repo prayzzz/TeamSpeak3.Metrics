@@ -1,0 +1,2 @@
+clid=3 cid=4 client_nickname=prayzzz\s\p\sPatrick client_type=0|clid=1 cid=5 client_nickname=Admin client_type=1
+error id=0 msg=ok

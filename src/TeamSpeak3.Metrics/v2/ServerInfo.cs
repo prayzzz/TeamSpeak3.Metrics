@@ -36,7 +36,7 @@ namespace TeamSpeak3.Metrics.v2
 
         public string VirtualServerUniqueIdentifier { get; set; }
 
-        public string VirtualServerUptime { get; set; }
+        public int VirtualServerUptime { get; set; }
 
         public string VirtualServerVersion { get; set; }
     }

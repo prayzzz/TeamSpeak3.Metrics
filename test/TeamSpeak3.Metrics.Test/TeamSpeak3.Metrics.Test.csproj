@@ -15,4 +15,8 @@
     <ItemGroup>
         <ProjectReference Include="..\..\src\TeamSpeak3.Metrics\TeamSpeak3.Metrics.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\**\*.*"/>
+    </ItemGroup>
 </Project>
