@@ -72,12 +72,18 @@ namespace TeamSpeak3.Metrics.v2
         private static void Set<T>(object[] parameters, string value, PropertyInfo setter, T obj) where T : new()
         {
             var intType = typeof(int);
+            var longType = typeof(ulong);
             var stringType = typeof(string);
             var doubleType = typeof(double);
 
             if (setter.PropertyType == intType)
             {
                 parameters[0] = int.Parse(value);
+                setter.GetSetMethod().Invoke(obj, parameters);
+            }
+            else if (setter.PropertyType == longType)
+            {
+                parameters[0] = ulong.Parse(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
             }
             else if (setter.PropertyType == stringType)

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TeamSpeak3.Metrics.Query;
 using TeamSpeak3.Metrics.Web.Configuration;
 using TeamSpeak3.Metrics.Web.Extensions;
-using TeamSpeak3.Metrics.Web.Services;
 
 namespace TeamSpeak3.Metrics.Web
 {
@@ -30,7 +26,7 @@ namespace TeamSpeak3.Metrics.Web
         public void Configure(IApplicationBuilder app)
         {
             app.LogServerAddresses(_logger);
-            
+
             app.UseRouter(CreateRouter(app));
         }
 
@@ -39,16 +35,16 @@ namespace TeamSpeak3.Metrics.Web
             services.Configure<AppConfiguration>(_configuration.GetSection("App"));
             services.AddRouting();
 
-            var builder = new ContainerBuilder();
-            builder.Populate(services);
-            builder.RegisterType<TeamSpeakDataService>().As<IHostedService>().As<ITeamSpeakMetrics>().SingleInstance();
-            builder.Register(c =>
-            {
-                var logger = c.Resolve<ILogger<TeamSpeakConnection>>();
-                return new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(logger));
-            }).SingleInstance();
+            // var builder = new ContainerBuilder();
+            // builder.Populate(services);
+            // builder.RegisterType<TeamSpeakDataService>().As<IHostedService>().As<ITeamSpeakMetrics>().SingleInstance();
+            // builder.Register(c =>
+            // {
+            //     var logger = c.Resolve<ILogger<TeamSpeakConnection>>();
+            //     return new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(logger));
+            // }).SingleInstance();
 
-            return new AutofacServiceProvider(builder.Build());
+            return new AutofacServiceProvider(null);
         }
 
         private static IRouter CreateRouter(IApplicationBuilder app)

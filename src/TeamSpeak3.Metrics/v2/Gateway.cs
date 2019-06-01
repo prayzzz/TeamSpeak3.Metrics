@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using TeamSpeak3.Metrics.Configuration;
 
 namespace TeamSpeak3.Metrics.v2
@@ -15,12 +14,10 @@ namespace TeamSpeak3.Metrics.v2
         private readonly ServerConfiguration _config;
 
         private readonly IQueryConnectionFactory _factory;
-        private readonly ILogger<Gateway> _logger;
 
-        public Gateway(IQueryConnectionFactory factory, ILogger<Gateway> logger, ServerConfiguration config)
+        public Gateway(IQueryConnectionFactory factory, ServerConfiguration config)
         {
             _factory = factory;
-            _logger = logger;
             _config = config;
         }
 

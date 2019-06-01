@@ -1,5 +1,3 @@
-using TeamSpeak3.Metrics.Query;
-
 namespace TeamSpeak3.Metrics.v2
 {
     public class BooleanResponse
@@ -12,8 +10,8 @@ namespace TeamSpeak3.Metrics.v2
 
         public int Id { get; }
 
-        public string Message { get; }
-
         public bool IsSuccess => Id == 0;
+
+        public string Message { get; }
     }
 }

@@ -25,7 +25,6 @@ namespace TeamSpeak3.Metrics.Test.v2
         {
             const int vServerPort = 4242;
 
-            var logger = new ConsoleLogger<Gateway>();
             var connection = TH.CreateMock<IQueryConnection>();
             var factory = TH.CreateMock<IQueryConnectionFactory>();
             factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
@@ -39,7 +38,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             connection.Setup(x => x.Dispose());
 
             // Act
-            var gateway = new Gateway(factory.Object, logger, ServerConfiguration);
+            var gateway = new Gateway(factory.Object, ServerConfiguration);
             var result = await gateway.GetClientList(vServerPort);
 
             // Assert
@@ -64,7 +63,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             connection.Setup(x => x.Dispose());
 
             // Act
-            var gateway = new Gateway(factory.Object, logger, ServerConfiguration);
+            var gateway = new Gateway(factory.Object, ServerConfiguration);
             var result = await Assert.ThrowsExceptionAsync<Exception>(() => gateway.GetClientList(vServerPort));
 
             // Assert
@@ -76,7 +75,6 @@ namespace TeamSpeak3.Metrics.Test.v2
         {
             const int vServerPort = 4242;
 
-            var logger = new ConsoleLogger<Gateway>();
             var connection = TH.CreateMock<IQueryConnection>();
             var factory = TH.CreateMock<IQueryConnectionFactory>();
             factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
@@ -90,7 +88,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             connection.Setup(x => x.Dispose());
 
             // Act
-            var gateway = new Gateway(factory.Object, logger, ServerConfiguration);
+            var gateway = new Gateway(factory.Object, ServerConfiguration);
             var result = await gateway.GetServerInfo(vServerPort);
 
             // Assert
@@ -102,9 +100,6 @@ namespace TeamSpeak3.Metrics.Test.v2
         [TestMethod]
         public async Task GetServerList()
         {
-            const int vServerPort = 4242;
-
-            var logger = new ConsoleLogger<Gateway>();
             var connection = TH.CreateMock<IQueryConnection>();
             var factory = TH.CreateMock<IQueryConnectionFactory>();
             factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
@@ -116,7 +111,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             connection.Setup(x => x.Dispose());
 
             // Act
-            var gateway = new Gateway(factory.Object, logger, ServerConfiguration);
+            var gateway = new Gateway(factory.Object, ServerConfiguration);
             var result = await gateway.GetServerList();
 
             // Assert

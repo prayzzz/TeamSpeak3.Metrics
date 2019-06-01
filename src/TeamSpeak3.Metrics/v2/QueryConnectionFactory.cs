@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using TelnetClient = PrimS.Telnet.Client;
 
 namespace TeamSpeak3.Metrics.v2
@@ -12,9 +13,19 @@ namespace TeamSpeak3.Metrics.v2
 
     public class QueryConnectionFactory : IQueryConnectionFactory
     {
+        private readonly ILoggerFactory _loggerFactory;
+
+        public QueryConnectionFactory(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
+
         public async Task<IQueryConnection> Create(string ip, int port)
         {
-            if (string.IsNullOrEmpty(ip)) throw new ArgumentNullException(nameof(ip));
+            if (string.IsNullOrEmpty(ip))
+            {
+                throw new ArgumentNullException(nameof(ip));
+            }
 
             var cancellationToken = new CancellationToken();
 
@@ -44,7 +55,7 @@ namespace TeamSpeak3.Metrics.v2
                 response = (await telnetClient.ReadAsync()).Trim();
             }
 
-            return new QueryConnection(telnetClient);
+            return new QueryConnection(telnetClient, _loggerFactory.CreateLogger<QueryConnection>());
         }
     }
 }
