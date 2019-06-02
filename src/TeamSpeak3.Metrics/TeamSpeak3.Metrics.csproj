@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.0</TargetFramework>
+        <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
@@ -9,8 +9,7 @@
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
         <PackageReference Include="Telnet" Version="0.8.3" />
-        <PackageReference Include="LiteGuard" Version="2.2.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Include="LiteGuard" Version="2.2.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -42,9 +41,5 @@
         <RepositoryUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
-
-    <Target Name="PrintVersion" BeforeTargets="BeforeBuild">
-        <Message Text="Building $(AssemblyName) version $(Version)" Importance="High" />
-    </Target>
 
 </Project>

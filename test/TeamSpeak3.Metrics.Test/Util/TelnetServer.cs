@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 
-namespace TeamSpeak3.Metrics.Test
+namespace TeamSpeak3.Metrics.Test.Util
 {
     public class TelnetServer : IDisposable
     {

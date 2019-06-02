@@ -1,18 +1,17 @@
-using System;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using TeamSpeak3.Metrics.Configuration;
-using TeamSpeak3.Metrics.v2;
+using TeamSpeak3.Metrics.Common;
+using TeamSpeak3.Metrics.Test.Util;
 
-namespace TeamSpeak3.Metrics.Test.v2
+namespace TeamSpeak3.Metrics.Test
 {
     [TestClass]
     public class GatewayTest
     {
-        private static readonly ServerConfiguration ServerConfiguration = new ServerConfiguration
+        private static readonly ServerOptions ServerOptions = new ServerOptions
         {
             Host = "localhost",
             QueryPort = 1234,
@@ -26,10 +25,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             const int vServerPort = 4242;
 
             var connection = TH.CreateMock<IQueryConnection>();
-            var factory = TH.CreateMock<IQueryConnectionFactory>();
-            factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
-
-            connection.Setup(x => x.SendAndReceive($"login {ServerConfiguration.QueryUsername} {ServerConfiguration.QueryPassword}"))
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
                       .ReturnsAsync("error id=0 msg=ok");
             connection.Setup(x => x.SendAndReceive($"use port={vServerPort}"))
                       .ReturnsAsync("error id=0 msg=ok");
@@ -37,9 +33,14 @@ namespace TeamSpeak3.Metrics.Test.v2
                       .ReturnsAsync(TH.ReadEmbeddedFile(Assembly.GetExecutingAssembly(), "Resources.GatewayTest.GetClientList.txt"));
             connection.Setup(x => x.Dispose());
 
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
             // Act
-            var gateway = new Gateway(factory.Object, ServerConfiguration);
-            var result = await gateway.GetClientList(vServerPort);
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = (await gateway.GetClientList(vServerPort)).ToList();
 
             // Assert
             Assert.IsTrue(result.Any(c => c.ClientNickname == "Admin"));
@@ -53,18 +54,19 @@ namespace TeamSpeak3.Metrics.Test.v2
         {
             const int vServerPort = 4242;
 
-            var logger = new ConsoleLogger<Gateway>();
             var connection = TH.CreateMock<IQueryConnection>();
-            var factory = TH.CreateMock<IQueryConnectionFactory>();
-            factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
-
-            connection.Setup(x => x.SendAndReceive($"login {ServerConfiguration.QueryUsername} {ServerConfiguration.QueryPassword}"))
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
                       .ReturnsAsync("error id=520 msg=invalid\\sloginname\\sor\\spassword");
             connection.Setup(x => x.Dispose());
 
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
             // Act
-            var gateway = new Gateway(factory.Object, ServerConfiguration);
-            var result = await Assert.ThrowsExceptionAsync<Exception>(() => gateway.GetClientList(vServerPort));
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = await Assert.ThrowsExceptionAsync<MetricsException>(() => gateway.GetClientList(vServerPort));
 
             // Assert
             Assert.AreEqual("Couldn't login with query credentials 'invalid loginname or password'", result.Message);
@@ -76,10 +78,7 @@ namespace TeamSpeak3.Metrics.Test.v2
             const int vServerPort = 4242;
 
             var connection = TH.CreateMock<IQueryConnection>();
-            var factory = TH.CreateMock<IQueryConnectionFactory>();
-            factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
-
-            connection.Setup(x => x.SendAndReceive($"login {ServerConfiguration.QueryUsername} {ServerConfiguration.QueryPassword}"))
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
                       .ReturnsAsync("error id=0 msg=ok");
             connection.Setup(x => x.SendAndReceive($"use port={vServerPort}"))
                       .ReturnsAsync("error id=0 msg=ok");
@@ -87,8 +86,13 @@ namespace TeamSpeak3.Metrics.Test.v2
                       .ReturnsAsync(TH.ReadEmbeddedFile(Assembly.GetExecutingAssembly(), "Resources.GatewayTest.GetServerInfo.txt"));
             connection.Setup(x => x.Dispose());
 
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
             // Act
-            var gateway = new Gateway(factory.Object, ServerConfiguration);
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
             var result = await gateway.GetServerInfo(vServerPort);
 
             // Assert
@@ -101,24 +105,49 @@ namespace TeamSpeak3.Metrics.Test.v2
         public async Task GetServerList()
         {
             var connection = TH.CreateMock<IQueryConnection>();
-            var factory = TH.CreateMock<IQueryConnectionFactory>();
-            factory.Setup(x => x.Create(ServerConfiguration.Host, ServerConfiguration.QueryPort)).ReturnsAsync(connection.Object);
-
-            connection.Setup(x => x.SendAndReceive($"login {ServerConfiguration.QueryUsername} {ServerConfiguration.QueryPassword}"))
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
                       .ReturnsAsync("error id=0 msg=ok");
             connection.Setup(x => x.SendAndReceive("serverlist"))
                       .ReturnsAsync(TH.ReadEmbeddedFile(Assembly.GetExecutingAssembly(), "Resources.GatewayTest.GetServerList.txt"));
             connection.Setup(x => x.Dispose());
 
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
             // Act
-            var gateway = new Gateway(factory.Object, ServerConfiguration);
-            var result = await gateway.GetServerList();
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = (await gateway.GetServerList()).ToList();
 
             // Assert
             Assert.IsTrue(result.Any(c => c.VirtualServerName == "TeamSpeak ]I[ Server"));
             Assert.IsTrue(result.Any(c => c.VirtualServerPort == 9987));
             Assert.IsTrue(result.Any(c => c.VirtualServerName == "TeamSpeak ]I[ Server2"));
             Assert.IsTrue(result.Any(c => c.VirtualServerPort == 9988));
+        }
+
+        [TestMethod]
+        public async Task GetServerListFailed()
+        {
+            var connection = TH.CreateMock<IQueryConnection>();
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive("serverlist"))
+                      .ReturnsAsync("error id=123 msg=Some\\sError");
+            connection.Setup(x => x.Dispose());
+
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
+            // Act
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = await Assert.ThrowsExceptionAsync<MetricsException>(() => gateway.GetServerList());
+
+            // Assert
+            Assert.AreEqual("Couldn't retrieve ServerList 'Some Error'", result.Message);
         }
     }
 }

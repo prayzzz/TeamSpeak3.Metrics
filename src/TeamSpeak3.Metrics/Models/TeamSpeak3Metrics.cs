@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 
-namespace TeamSpeak3.Metrics.v2
+namespace TeamSpeak3.Metrics.Models
 {
-    public class Teamspeak3Metrics
+    public class TeamSpeak3Metrics
     {
         public int ChannelsOnline { get; set; }
 
@@ -16,8 +16,6 @@ namespace TeamSpeak3.Metrics.v2
 
         public int ConnectionBytesSentTotal { get; set; }
 
-        public int Id { get; set; }
-
         public int MaxClients { get; set; }
 
         public string Name { get; set; }
@@ -27,6 +25,8 @@ namespace TeamSpeak3.Metrics.v2
         public int QueryClientConnections { get; set; }
 
         public int QueryClientsOnline { get; set; }
+
+        public int ServerId { get; set; }
 
         public string Status { get; set; }
 

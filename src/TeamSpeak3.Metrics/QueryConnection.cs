@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TelnetClient = PrimS.Telnet.Client;
 
-namespace TeamSpeak3.Metrics.v2
+namespace TeamSpeak3.Metrics
 {
     public interface IQueryConnection : IDisposable
     {
@@ -30,14 +30,20 @@ namespace TeamSpeak3.Metrics.v2
         public async Task<string> SendAndReceive(string command)
         {
             await _telnetClient.WriteLine(command);
-            var response = await _telnetClient.ReadAsync();
+            var response = (await _telnetClient.ReadAsync()).Trim();
 
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                if (!command.StartsWith("login"))
-                {
-                    _logger.LogDebug(command);
-                }
+                _logger.LogDebug(command);
+
+                // if (!command.StartsWith("login"))
+                // {
+                //     _logger.LogDebug(command);
+                // }
+                // else
+                // {
+                //     _logger.LogDebug("login");
+                // }
 
                 _logger.LogDebug(response);
             }

@@ -3,35 +3,50 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using TeamSpeak3.Metrics.Common;
 
-namespace TeamSpeak3.Metrics.v2
+namespace TeamSpeak3.Metrics.Mapping
 {
-    public static class Parser
+    internal static class Mapper
     {
-        private static readonly Regex BooleanResponseRegex = new Regex("id=(?<id>[0-9]+) msg=(?<msg>.+)");
+        private static readonly Regex StatusResponseRegex = new Regex("^error id=(?<id>\\d+) msg=(?<msg>\\S+)");
         private static readonly Regex KeyValueRegex = new Regex("(?<key>\\S+)=(?<value>\\S+)");
         private static readonly Dictionary<Type, List<PropertyInfo>> Setters = new Dictionary<Type, List<PropertyInfo>>();
 
-        public static BooleanResponse ToBooleanResponse(string response)
+        private static readonly Type DoubleType = typeof(double);
+        private static readonly Type IntType = typeof(int);
+        private static readonly Type LongType = typeof(ulong);
+        private static readonly Type StringType = typeof(string);
+
+        private static readonly string[] NewLine = { Environment.NewLine };
+
+        internal static DataResponse<IEnumerable<T>> ToData<T>(string response) where T : new()
         {
-            var match = BooleanResponseRegex.Match(response);
-            if (!match.Groups["id"].Success)
+            var lines = response.Trim().Split(NewLine, StringSplitOptions.RemoveEmptyEntries);
+            var status = ToStatusResponseInternal(lines.Last());
+            if (!status.IsSuccess)
             {
-                throw new Exception($"Id not found in response '{response}'");
+                return new DataResponse<IEnumerable<T>>(status);
             }
 
-            if (!match.Groups["msg"].Success)
+            if (lines.Length < 2)
             {
-                throw new Exception($"Message not found in response '{response}'");
+                throw new MetricsException("Response doesn't contain data");
             }
 
-            return new BooleanResponse(int.Parse(match.Groups["id"].Value), match.Groups["msg"].Value);
+            var items = response.Trim().Split('|');
+            return new DataResponse<IEnumerable<T>>(status, items.Select(x => Parse<T>(x)));
         }
 
-        public static IEnumerable<T> ToData<T>(string response) where T : new()
+        internal static StatusResponse ToStatusResponse(string response)
         {
-            var items = response.Trim().Split("|");
-            return items.Select(x => Parse<T>(x));
+            var lines = response.Trim().Split(NewLine, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length < 1)
+            {
+                throw new MetricsException("Response doesn't contain status line");
+            }
+
+            return ToStatusResponseInternal(lines.Last());
         }
 
         private static bool IsMatch(this MemberInfo parameter, string name)
@@ -71,27 +86,22 @@ namespace TeamSpeak3.Metrics.v2
 
         private static void Set<T>(object[] parameters, string value, PropertyInfo setter, T obj) where T : new()
         {
-            var intType = typeof(int);
-            var longType = typeof(ulong);
-            var stringType = typeof(string);
-            var doubleType = typeof(double);
-
-            if (setter.PropertyType == intType)
+            if (setter.PropertyType == IntType)
             {
                 parameters[0] = int.Parse(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
             }
-            else if (setter.PropertyType == longType)
+            else if (setter.PropertyType == LongType)
             {
                 parameters[0] = ulong.Parse(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
             }
-            else if (setter.PropertyType == stringType)
+            else if (setter.PropertyType == StringType)
             {
-                parameters[0] = Replacer.Replace(value);
+                parameters[0] = Escaper.ReverseEscape(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
             }
-            else if (setter.PropertyType == doubleType)
+            else if (setter.PropertyType == DoubleType)
             {
                 parameters[0] = double.Parse(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
@@ -100,6 +110,17 @@ namespace TeamSpeak3.Metrics.v2
             {
                 throw new ArgumentOutOfRangeException(setter.PropertyType.ToString());
             }
+        }
+
+        private static StatusResponse ToStatusResponseInternal(string statusLine)
+        {
+            var match = StatusResponseRegex.Match(statusLine);
+            if (!match.Success)
+            {
+                throw new MetricsException("Response doesn't contain status line");
+            }
+
+            return new StatusResponse(int.Parse(match.Groups["id"].Value), Escaper.ReverseEscape(match.Groups["msg"].Value));
         }
     }
 }

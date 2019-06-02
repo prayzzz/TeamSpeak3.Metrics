@@ -1,6 +1,6 @@
-﻿namespace TeamSpeak3.Metrics.Configuration
+﻿namespace TeamSpeak3.Metrics.Common
 {
-    public class ServerConfiguration
+    public class ServerOptions
     {
         public string Host { get; set; }
 

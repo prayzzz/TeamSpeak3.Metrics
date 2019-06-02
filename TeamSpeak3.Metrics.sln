@@ -21,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A07AFED2-5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamSpeak3.Metrics.Web", "src\TeamSpeak3.Metrics.Web\TeamSpeak3.Metrics.Web.csproj", "{DD799DB2-AB8F-4BA6-BCC6-8BC6B62DBC64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeamSpeak3.Metrics.AspNetCore", "src\TeamSpeak3.Metrics.AspNetCore\TeamSpeak3.Metrics.AspNetCore.csproj", "{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DD799DB2-AB8F-4BA6-BCC6-8BC6B62DBC64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD799DB2-AB8F-4BA6-BCC6-8BC6B62DBC64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD799DB2-AB8F-4BA6-BCC6-8BC6B62DBC64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,5 +56,6 @@ Global
 		{3146CF95-F2C3-4F31-AFE7-5076FD0A2CF6} = {13CF8F8C-1E69-4352-A86E-25A95076B5A9}
 		{9188B9C1-C4DD-499B-A7EB-BD38BA1C4194} = {A07AFED2-5064-49D9-91AC-45F36E1E9CF2}
 		{DD799DB2-AB8F-4BA6-BCC6-8BC6B62DBC64} = {13CF8F8C-1E69-4352-A86E-25A95076B5A9}
+		{BB61BB29-2B5C-4167-99AB-89CBA5DAFD56} = {13CF8F8C-1E69-4352-A86E-25A95076B5A9}
 	EndGlobalSection
 EndGlobal

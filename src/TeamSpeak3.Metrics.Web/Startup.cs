@@ -1,18 +1,15 @@
-﻿using System;
-using System.Threading.Tasks;
-using Autofac.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Routing;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TeamSpeak3.Metrics.Web.Configuration;
-using TeamSpeak3.Metrics.Web.Extensions;
+using TeamSpeak3.Metrics.AspNetCore;
+using TeamSpeak3.Metrics.Common;
+using TeamSpeak3.Metrics.Web.Common;
 
 namespace TeamSpeak3.Metrics.Web
 {
-    public class Startup : IStartup
+    public class Startup
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<Startup> _logger;
@@ -27,38 +24,16 @@ namespace TeamSpeak3.Metrics.Web
         {
             app.LogServerAddresses(_logger);
 
-            app.UseRouter(CreateRouter(app));
+            app.UseMvc();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AppConfiguration>(_configuration.GetSection("App"));
-            services.AddRouting();
+            services.Configure<ServerOptions>(_configuration.GetSection("App:TS3Server"));
 
-            // var builder = new ContainerBuilder();
-            // builder.Populate(services);
-            // builder.RegisterType<TeamSpeakDataService>().As<IHostedService>().As<ITeamSpeakMetrics>().SingleInstance();
-            // builder.Register(c =>
-            // {
-            //     var logger = c.Resolve<ILogger<TeamSpeakConnection>>();
-            //     return new Func<TeamSpeakConnection>(() => new TeamSpeakConnection(logger));
-            // }).SingleInstance();
+            services.AddTeamSpeak3Metrics();
 
-            return new AutofacServiceProvider(null);
-        }
-
-        private static IRouter CreateRouter(IApplicationBuilder app)
-        {
-            var builder = new RouteBuilder(app);
-            builder.MapGet("", context =>
-            {
-                context.Response.Redirect("/api/metrics");
-                return Task.CompletedTask;
-            });
-
-            builder.MapGet("api/metrics", MetricsRequest.Handle);
-
-            return builder.Build();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }
     }
 }

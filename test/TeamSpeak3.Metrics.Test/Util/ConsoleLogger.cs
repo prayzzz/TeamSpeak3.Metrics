@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace TeamSpeak3.Metrics.Test
+namespace TeamSpeak3.Metrics.Test.Util
 {
     public class ConsoleLogger<T> : ConsoleLogger, ILogger<T>
     {

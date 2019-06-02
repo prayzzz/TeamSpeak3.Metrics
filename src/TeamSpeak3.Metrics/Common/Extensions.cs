@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 
-namespace TeamSpeak3.Metrics.v2
+namespace TeamSpeak3.Metrics.Common
 {
-    public static class DictionaryExtensions
+    internal static class Extensions
     {
-        public static TV ComputeIfAbsent<TK, TV>(this IDictionary<TK, TV> dictionary, TK key, Func<TK, TV> compute)
+        internal static TV ComputeIfAbsent<TK, TV>(this IDictionary<TK, TV> dictionary, TK key, Func<TK, TV> compute)
         {
             if (dictionary.TryGetValue(key, out var value))
             {

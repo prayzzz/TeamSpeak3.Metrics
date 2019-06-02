@@ -2,9 +2,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using TeamSpeak3.Metrics.Common;
 using TelnetClient = PrimS.Telnet.Client;
 
-namespace TeamSpeak3.Metrics.v2
+namespace TeamSpeak3.Metrics
 {
     public interface IQueryConnectionFactory
     {
@@ -36,16 +37,16 @@ namespace TeamSpeak3.Metrics.v2
             }
             catch (InvalidOperationException e)
             {
-                throw new TeamSpeak3MetricsException($"Couldn't connect to TeamSpeak server at {ip}:{port}", e);
+                throw new MetricsException($"Couldn't connect to TeamSpeak server at {ip}:{port}", e);
             }
             catch (Exception e)
             {
-                throw new TeamSpeak3MetricsException($"Unknown error while establishing connect to TeamSpeak server at {ip}:{port}", e);
+                throw new MetricsException($"Unknown error while establishing connect to TeamSpeak server at {ip}:{port}", e);
             }
 
             if (!telnetClient.IsConnected)
             {
-                throw new TeamSpeak3MetricsException($"Couldn't connect to TeamSpeak server at {ip}:{port}");
+                throw new MetricsException($"Couldn't connect to TeamSpeak server at {ip}:{port}");
             }
 
             // Read welcome message
