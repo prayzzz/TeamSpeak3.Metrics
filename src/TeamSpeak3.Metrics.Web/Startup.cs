@@ -31,7 +31,7 @@ namespace TeamSpeak3.Metrics.Web
         {
             services.Configure<ServerOptions>(_configuration.GetSection("App:TS3Server"));
 
-            services.AddTeamSpeak3Metrics();
+            services.AddTeamSpeak3Metrics().AsHostedService();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
         }

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TeamSpeak3.Metrics.AspNetCore.Hosted;
 using TeamSpeak3.Metrics.Models;
 
 namespace TeamSpeak3.Metrics.Web.Controllers
@@ -9,17 +9,17 @@ namespace TeamSpeak3.Metrics.Web.Controllers
     [Route("api/[controller]")]
     public class MetricsController : ControllerBase
     {
-        private readonly IMetricCollector _metricCollector;
+        private readonly IMetricCollectorCache _metricCollectorCache;
 
-        public MetricsController(IMetricCollector metricCollector)
+        public MetricsController(IMetricCollectorCache metricCollectorCache)
         {
-            _metricCollector = metricCollector;
+            _metricCollectorCache = metricCollectorCache;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<TeamSpeak3Metrics>> Get()
+        public IEnumerable<TeamSpeak3Metrics> Get()
         {
-            return await _metricCollector.Collect();
+            return _metricCollectorCache.Current;
         }
     }
 }

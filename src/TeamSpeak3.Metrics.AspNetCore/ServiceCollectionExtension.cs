@@ -5,13 +5,13 @@ namespace TeamSpeak3.Metrics.AspNetCore
 {
     public static class ServiceCollectionExtension
     {
-        public static IServiceCollection AddTeamSpeak3Metrics(this IServiceCollection serviceCollection)
+        public static ITeamSpeak3MetricsBuilder AddTeamSpeak3Metrics(this IServiceCollection serviceCollection)
         {
             serviceCollection.TryAddSingleton<IQueryConnectionFactory, QueryConnectionFactory>();
             serviceCollection.TryAddSingleton<IMetricCollector, MetricCollector>();
             serviceCollection.TryAddSingleton<IGateway, Gateway>();
 
-            return serviceCollection;
+            return new TeamSpeak3MetricsBuilder(serviceCollection);
         }
     }
 }
