@@ -34,18 +34,16 @@ namespace TeamSpeak3.Metrics
 
             if (_logger.IsEnabled(LogLevel.Debug))
             {
-                _logger.LogDebug(command);
+                if (!command.StartsWith("login"))
+                {
+                    _logger.LogDebug($"Command: {command}");
+                }
+                else
+                {
+                    _logger.LogDebug("Command: login");
+                }
 
-                // if (!command.StartsWith("login"))
-                // {
-                //     _logger.LogDebug(command);
-                // }
-                // else
-                // {
-                //     _logger.LogDebug("login");
-                // }
-
-                _logger.LogDebug(response);
+                _logger.LogDebug($"Response: {response}");
             }
 
             return response;

@@ -18,7 +18,7 @@ namespace TeamSpeak3.Metrics.Mapping
         private static readonly Type LongType = typeof(ulong);
         private static readonly Type StringType = typeof(string);
 
-        private static readonly string[] NewLine = { Environment.NewLine };
+        private static readonly string[] NewLine = { "\r\n", "\n", "\r" };
 
         internal static DataResponse<IEnumerable<T>> ToData<T>(string response) where T : new()
         {
