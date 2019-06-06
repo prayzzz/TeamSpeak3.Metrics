@@ -5,6 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="coverlet.msbuild" Version="2.6.1"/>
+        <PackageReference Include="ReportGenerator" Version="4.1.5"/>
         <PackageReference Include="Microsoft.AspNetCore.App" /> <!-- Solves versioning issues -->
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1"/>
         <PackageReference Include="Moq" Version="4.11.0"/>
@@ -18,5 +20,14 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\**\*.*"/>
+        <None Remove="coverage\**"/>
+        <None Remove="coverage.opencover.xml"/>
     </ItemGroup>
+
+    <Target Name="Coverage">
+        <ItemGroup>
+            <CoverageFiles Include="coverage.opencover.xml"/>
+        </ItemGroup>
+        <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="coverage" ReportTypes="Html" VerbosityLevel="Verbose"/>
+    </Target>
 </Project>

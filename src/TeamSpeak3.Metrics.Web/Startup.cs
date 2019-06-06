@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,20 +21,22 @@ namespace TeamSpeak3.Metrics.Web
             _logger = logger;
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            app.LogServerAddresses(_logger);
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
 
+            app.UseStartupInfoLogging(_logger);
             app.UseMvc();
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<ServerOptions>(_configuration.GetSection("App:TS3Server"));
-
             services.AddTeamSpeak3Metrics().AsHostedService();
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
     }
 }

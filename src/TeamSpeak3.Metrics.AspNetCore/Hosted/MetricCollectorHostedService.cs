@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using TeamSpeak3.Metrics.Models;
 
 namespace TeamSpeak3.Metrics.AspNetCore.Hosted
 {
-    public class MetricCollectorHostedService : HostedService, IMetricCollectorCache
+    public class MetricCollectorHostedService : BackgroundService, IMetricCollectorCache
     {
         private readonly IMetricCollector _metricCollector;
         private readonly MetricCollectorHostedServiceOptions _options;

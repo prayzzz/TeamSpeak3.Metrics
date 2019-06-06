@@ -8,20 +8,24 @@ namespace TeamSpeak3.Metrics.Web.Common
 {
     public static class ApplicationBuilderExtensions
     {
-        public static void LogServerAddresses(this IApplicationBuilder app, ILogger<Startup> logger)
+        public static void UseStartupInfoLogging(this IApplicationBuilder app, ILogger<Startup> logger)
         {
-            app.ApplicationServices.GetService<IApplicationLifetime>().ApplicationStarted.Register(() =>
+            using (var scope = app.ApplicationServices.CreateScope())
             {
-                var hostingEnvironment = app.ApplicationServices.GetService<IHostingEnvironment>();
-                logger.LogInformation("Hosting environment: {EnvironmentName}", hostingEnvironment.EnvironmentName);
-                logger.LogInformation("Content root path: {ContentRootPath}", hostingEnvironment.ContentRootPath);
-
-                var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
-                if (serverAddressesFeature != null)
+                var applicationLifetime = scope.ServiceProvider.GetService<IApplicationLifetime>();
+                applicationLifetime.ApplicationStarted.Register(() =>
                 {
-                    logger.LogInformation("Now listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
-                }
-            });
+                    var hostingEnvironment = app.ApplicationServices.GetService<IHostingEnvironment>();
+                    logger.LogInformation("Hosting environment: {EnvironmentName}", hostingEnvironment.EnvironmentName);
+                    logger.LogInformation("Content root path: {ContentRootPath}", hostingEnvironment.ContentRootPath);
+
+                    var serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+                    if (serverAddressesFeature != null)
+                    {
+                        logger.LogInformation("Now listening on: {Url}", string.Join(", ", serverAddressesFeature.Addresses));
+                    }
+                });
+            }
         }
     }
 }
