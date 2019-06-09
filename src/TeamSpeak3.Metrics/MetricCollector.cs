@@ -42,8 +42,12 @@ namespace TeamSpeak3.Metrics
                 ClientConnections = info.VirtualServerClientConnections,
                 Clients = clients.Select(c => c.ClientNickname),
                 ClientsOnline = info.VirtualServerClientsOnline,
+                ConnectionBytesReceivedSpeech = info.ConnectionBytesReceivedSpeech,
                 ConnectionBytesReceivedTotal = info.ConnectionBytesReceivedTotal,
+                ConnectionBytesSentSpeech = info.ConnectionBytesSentSpeech,
                 ConnectionBytesSentTotal = info.ConnectionBytesSentTotal,
+                ConnectionFiletransferBytesReceivedTotal = info.ConnectionFiletransferBytesReceivedTotal,
+                ConnectionFiletransferBytesSentTotal = info.ConnectionFiletransferBytesSentTotal,
                 MaxClients = info.VirtualServerMaxClients,
                 Name = info.VirtualServerName,
                 Port = info.VirtualServerPort,
@@ -51,6 +55,9 @@ namespace TeamSpeak3.Metrics
                 QueryClientsOnline = info.VirtualServerQueryClientsOnline,
                 ServerId = info.VirtualServerId,
                 Status = info.VirtualServerStatus,
+                TotalBytesDownloaded = info.VirtualServerTotalBytesDownloaded,
+                TotalBytesUploaded = info.VirtualServerTotalBytesUploaded,
+                TotalPacketlossTotal = info.VirtualServerTotalPacketlossTotal,
                 TotalPing = info.VirtualServerTotalPing,
                 Uptime = info.VirtualServerUptime
             };

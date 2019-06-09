@@ -12,9 +12,17 @@ namespace TeamSpeak3.Metrics.Models
 
         public int ClientsOnline { get; set; }
 
+        public int ConnectionBytesReceivedSpeech { get; set; }
+
         public int ConnectionBytesReceivedTotal { get; set; }
 
+        public int ConnectionBytesSentSpeech { get; set; }
+
         public int ConnectionBytesSentTotal { get; set; }
+
+        public int ConnectionFiletransferBytesReceivedTotal { get; set; }
+
+        public int ConnectionFiletransferBytesSentTotal { get; set; }
 
         public int MaxClients { get; set; }
 
@@ -29,6 +37,12 @@ namespace TeamSpeak3.Metrics.Models
         public int ServerId { get; set; }
 
         public string Status { get; set; }
+
+        public int TotalBytesDownloaded { get; set; }
+
+        public int TotalBytesUploaded { get; set; }
+
+        public double TotalPacketlossTotal { get; set; }
 
         public double TotalPing { get; set; }
 
