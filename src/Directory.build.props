@@ -11,6 +11,10 @@
         <PackageProjectUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</PackageProjectUrl>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 
+        <IncludeSymbols>true</IncludeSymbols>
+        <IncludeSource>true</IncludeSource>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        
         <PackageOutputPath>../../nupkg</PackageOutputPath>
     </PropertyGroup>
 
