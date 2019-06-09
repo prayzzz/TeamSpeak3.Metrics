@@ -45,7 +45,7 @@ namespace TeamSpeak3.Metrics
                 var dataResponse = Mapper.ToData<Client>(response);
                 if (!dataResponse.IsSuccess)
                 {
-                    throw new MetricsException($"Couldn't retrieve ClientList '{dataResponse.Message}'");
+                    ThrowMetricsException(dataResponse, ClientlistCommand);
                 }
 
                 return dataResponse.Data;
@@ -65,7 +65,7 @@ namespace TeamSpeak3.Metrics
                 var dataResponse = Mapper.ToData<ServerInfo>(response);
                 if (!dataResponse.IsSuccess)
                 {
-                    throw new MetricsException($"Couldn't retrieve ServerInfo '{dataResponse.Message}'");
+                    ThrowMetricsException(dataResponse, ServerInfoCommand);
                 }
 
                 return dataResponse.Data.FirstOrDefault();
@@ -84,7 +84,7 @@ namespace TeamSpeak3.Metrics
                 var dataResponse = Mapper.ToData<Server>(response);
                 if (!dataResponse.IsSuccess)
                 {
-                    throw new MetricsException($"Couldn't retrieve ServerList '{dataResponse.Message}'");
+                    ThrowMetricsException(dataResponse, ServerListCommand);
                 }
 
                 return dataResponse.Data;
@@ -111,6 +111,11 @@ namespace TeamSpeak3.Metrics
             {
                 throw new MetricsException($"Couldn't select Server: '{useResponse.Message}'");
             }
+        }
+
+        private static void ThrowMetricsException(QueryResponse dataResponse, string command)
+        {
+            throw new MetricsException($"Received error '{dataResponse.Id}: {dataResponse.Message}' when executing command '{command}'");
         }
     }
 }

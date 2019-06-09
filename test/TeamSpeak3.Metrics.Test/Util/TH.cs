@@ -1,5 +1,7 @@
 using System.IO;
 using System.Reflection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 
@@ -11,6 +13,14 @@ namespace TeamSpeak3.Metrics.Test.Util
         public static Mock<T> CreateMock<T>() where T : class
         {
             return new Mock<T>(MockBehavior.Strict);
+        }
+
+        public static Mock<ILoggerFactory> MockLoggerFactory()
+        {
+            var loggerFactory = CreateMock<ILoggerFactory>();
+            loggerFactory.Setup(x => x.CreateLogger(It.IsAny<string>())).Returns(NullLogger.Instance);
+
+            return loggerFactory;
         }
 
         public static Mock<IOptionsMonitor<T>> MockOptionsMonitor<T>(T options)

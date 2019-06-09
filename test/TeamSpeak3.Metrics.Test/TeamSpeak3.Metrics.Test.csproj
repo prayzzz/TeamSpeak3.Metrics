@@ -5,13 +5,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.msbuild" Version="2.6.1"/>
-        <PackageReference Include="ReportGenerator" Version="4.1.5"/>
-        <PackageReference Include="Microsoft.AspNetCore.App" /> <!-- Solves versioning issues -->
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1"/>
+        <!--        <PackageReference Include="Microsoft.AspNetCore.App" /> &lt;!&ndash; Solves versioning issues &ndash;&gt;-->
         <PackageReference Include="Moq" Version="4.11.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1"/>
         <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
         <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+        <PackageReference Include="coverlet.msbuild" Version="2.6.2"/>
+        <PackageReference Include="coverlet.collector" Version="1.0.0"/>
+        <PackageReference Include="ReportGenerator" Version="4.1.10"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -20,14 +21,12 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Resources\**\*.*"/>
-        <None Remove="coverage\**"/>
-        <None Remove="coverage.opencover.xml"/>
     </ItemGroup>
 
-    <Target Name="Coverage">
+    <Target Name="GenerateCoverageReport">
         <ItemGroup>
-            <CoverageFiles Include="coverage.opencover.xml"/>
+            <CoverageFiles Include="TestResults\**\*.xml"/>
         </ItemGroup>
-        <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="coverage" ReportTypes="Html" VerbosityLevel="Verbose"/>
+        <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="TestResults\Report" ReportTypes="Html" VerbosityLevel="Verbose"/>
     </Target>
 </Project>

@@ -7,5 +7,4 @@ appsettings.development.json
 
 *.DotSettings.user
 
-test/TeamSpeak3.Metrics.Test/coverage.opencover.xml
-test/TeamSpeak3.Metrics.Test/coverage/
+/test/TeamSpeak3.Metrics.Test/testresults/

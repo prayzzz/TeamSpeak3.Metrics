@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamSpeak3.Metrics", "src\T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamSpeak3.Metrics.Test", "test\TeamSpeak3.Metrics.Test\TeamSpeak3.Metrics.Test.csproj", "{9188B9C1-C4DD-499B-A7EB-BD38BA1C4194}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{CDF3BD96-D08C-4B91-8026-7F38EAADBD91}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A8BB09DA-E0C8-47AB-BD05-497823A4F371}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore

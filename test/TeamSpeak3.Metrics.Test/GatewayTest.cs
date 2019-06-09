@@ -50,6 +50,33 @@ namespace TeamSpeak3.Metrics.Test
         }
 
         [TestMethod]
+        public async Task GetClientListErrorResponse()
+        {
+            const int vServerPort = 4242;
+
+            var connection = TH.CreateMock<IQueryConnection>();
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive($"use port={vServerPort}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive("clientlist"))
+                      .ReturnsAsync("error id=1 msg=not\\sok");
+            connection.Setup(x => x.Dispose());
+
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
+            // Act
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = await Assert.ThrowsExceptionAsync<MetricsException>(() => gateway.GetClientList(vServerPort));
+
+            // Assert
+            Assert.AreEqual("Received error '1: not ok' when executing command 'clientlist'", result.Message);
+        }
+
+        [TestMethod]
         public async Task GetClientListLoginInvalid()
         {
             const int vServerPort = 4242;
@@ -102,6 +129,33 @@ namespace TeamSpeak3.Metrics.Test
         }
 
         [TestMethod]
+        public async Task GetServerInfoErrorResponse()
+        {
+            const int vServerPort = 4242;
+
+            var connection = TH.CreateMock<IQueryConnection>();
+            connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive($"use port={vServerPort}"))
+                      .ReturnsAsync("error id=0 msg=ok");
+            connection.Setup(x => x.SendAndReceive("serverinfo"))
+                      .ReturnsAsync("error id=1 msg=not\\sok");
+            connection.Setup(x => x.Dispose());
+
+            var factory = TH.CreateMock<IQueryConnectionFactory>();
+            factory.Setup(x => x.Create(ServerOptions.Host, ServerOptions.QueryPort)).ReturnsAsync(connection.Object);
+
+            var optionsMonitor = TH.MockOptionsMonitor(ServerOptions);
+
+            // Act
+            var gateway = new Gateway(factory.Object, optionsMonitor.Object);
+            var result = await Assert.ThrowsExceptionAsync<MetricsException>(() => gateway.GetServerInfo(vServerPort));
+
+            // Assert
+            Assert.AreEqual("Received error '1: not ok' when executing command 'serverinfo'", result.Message);
+        }
+
+        [TestMethod]
         public async Task GetServerList()
         {
             var connection = TH.CreateMock<IQueryConnection>();
@@ -134,7 +188,7 @@ namespace TeamSpeak3.Metrics.Test
             connection.Setup(x => x.SendAndReceive($"login {ServerOptions.QueryUsername} {ServerOptions.QueryPassword}"))
                       .ReturnsAsync("error id=0 msg=ok");
             connection.Setup(x => x.SendAndReceive("serverlist"))
-                      .ReturnsAsync("error id=123 msg=Some\\sError");
+                      .ReturnsAsync("error id=1 msg=not\\sok");
             connection.Setup(x => x.Dispose());
 
             var factory = TH.CreateMock<IQueryConnectionFactory>();
@@ -147,7 +201,7 @@ namespace TeamSpeak3.Metrics.Test
             var result = await Assert.ThrowsExceptionAsync<MetricsException>(() => gateway.GetServerList());
 
             // Assert
-            Assert.AreEqual("Couldn't retrieve ServerList 'Some Error'", result.Message);
+            Assert.AreEqual("Received error '1: not ok' when executing command 'serverlist'", result.Message);
         }
     }
 }

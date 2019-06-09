@@ -55,6 +55,10 @@ namespace TeamSpeak3.Metrics.Test.Util
             {
                 var messageBuffer = new byte[256];
                 var messageLength = handler.Receive(messageBuffer);
+                if (messageLength == 0)
+                {
+                    break;
+                }
 
                 var message = Encoding.ASCII.GetString(messageBuffer, 0, messageLength).Trim();
 
