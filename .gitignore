@@ -3,6 +3,8 @@
 [Bb]in/
 [Oo]bj/
 
+nupkg/
+
 appsettings.development.json
 
 *.DotSettings.user

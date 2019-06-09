@@ -1,0 +1,26 @@
+<Project>
+    <PropertyGroup>
+        <Description>Collect metrics from your TeamSpeak 3 Server</Description>
+        <Authors>prayzzz and Contributors</Authors>
+        <Copyright>Copyright (c) 2019 prayzzz and Contributors</Copyright>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <PackageTags>TeamSpeak TeamSpeak3 TS3 Metrics</PackageTags>
+        <PackageVersion>$(Version)</PackageVersion>
+        <PackageProjectUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</PackageProjectUrl>
+        <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+
+        <PackageOutputPath>../../nupkg</PackageOutputPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <RepositoryUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="$(PackageLicense)"/>
+    </ItemGroup>
+
+</Project>
