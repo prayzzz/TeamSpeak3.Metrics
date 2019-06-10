@@ -45,9 +45,15 @@ public void ConfigureServices(IServiceCollection services)
 }        
 ```
 
+Inject `IMetricCollectorCache` to access the value of the latest `HostedService` execution.
+
+Inject `IMetricCollector` to collect values yourself, e.g. per request.
+
 Make sure the used Query account is in `AdminServerQuery` group.
 See https://forum.teamspeak.com/threads/138692-Admin-Server-Query-Error-id-512-msg-invalid-sclientID?p=465167#post465167 how to achieve this.
   
+  
+See [teamspeak3-metrics-web](https://github.com/prayzzz/teamspeak3-metrics-web) for a sample implementation.
 ## Contributing
 
 1. Fork it!
