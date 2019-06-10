@@ -10,6 +10,7 @@
         <PackageVersion>$(Version)</PackageVersion>
         <PackageProjectUrl>https://github.com/prayzzz/TeamSpeak3.Metrics</PackageProjectUrl>
         <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
 
         <IncludeSymbols>true</IncludeSymbols>
         <IncludeSource>true</IncludeSource>
@@ -24,7 +25,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="$(PackageLicense)"/>
+        <None Include="..\..\LICENSE.txt" Pack="true" PackagePath="LICENSE.txt" />
+        <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
     </ItemGroup>
 
 </Project>

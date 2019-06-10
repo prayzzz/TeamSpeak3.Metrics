@@ -11,13 +11,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		README.md = README.md
-		pack.ps1 = pack.ps1
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{13CF8F8C-1E69-4352-A86E-25A95076B5A9}"
 ProjectSection(SolutionItems) = preProject
-	Directory.build.targets = Directory.build.targets
 	src\Directory.build.props = src\Directory.build.props
+	src\Directory.build.targets = src\Directory.build.targets
 EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A07AFED2-5064-49D9-91AC-45F36E1E9CF2}"
