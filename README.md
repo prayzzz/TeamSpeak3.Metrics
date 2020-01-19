@@ -2,7 +2,7 @@
 
 ![Nuget](https://img.shields.io/nuget/v/TeamSpeak3.Metrics.svg?style=flat-square)
 
-Library to collect metrics from your TeamSpeak3 servers written in C# using .NET Standard 2.0
+Library to collect metrics from your TeamSpeak3 servers written in C# using .NET Standard 2.1
 
 ## Installation
 

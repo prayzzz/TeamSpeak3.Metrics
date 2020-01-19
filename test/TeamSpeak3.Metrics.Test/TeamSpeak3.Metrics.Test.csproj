@@ -1,18 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
         <!--        <PackageReference Include="Microsoft.AspNetCore.App" /> &lt;!&ndash; Solves versioning issues &ndash;&gt;-->
-        <PackageReference Include="Moq" Version="4.11.0"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.1.1"/>
-        <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
-        <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
-        <PackageReference Include="coverlet.msbuild" Version="2.6.2"/>
-        <PackageReference Include="coverlet.collector" Version="1.0.0"/>
-        <PackageReference Include="ReportGenerator" Version="4.1.10"/>
+        <PackageReference Include="Moq" Version="4.13.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
+        <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+        <PackageReference Include="coverlet.msbuild" Version="2.8.0" />
+        <PackageReference Include="coverlet.collector" Version="1.2.0" />
+        <PackageReference Include="ReportGenerator" Version="4.4.4" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,13 +20,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Resources\**\*.*"/>
+        <EmbeddedResource Include="Resources\**\*.*" />
     </ItemGroup>
 
     <Target Name="GenerateCoverageReport">
         <ItemGroup>
-            <CoverageFiles Include="TestResults\**\*.xml"/>
+            <CoverageFiles Include="TestResults\**\*.xml" />
         </ItemGroup>
-        <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="TestResults\Report" ReportTypes="Html" VerbosityLevel="Verbose"/>
+        <ReportGenerator ReportFiles="@(CoverageFiles)" TargetDirectory="TestResults\Report" ReportTypes="Html" VerbosityLevel="Verbose" />
     </Target>
 </Project>
