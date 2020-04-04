@@ -2,53 +2,53 @@ namespace TeamSpeak3.Metrics.Models
 {
     public class ServerInfo
     {
-        public int ConnectionBandwidthReceivedLastMinuteTotal { get; set; }
+        public ulong ConnectionBandwidthReceivedLastMinuteTotal { get; set; }
 
-        public int ConnectionBandwidthReceivedLastSecondTotal { get; set; }
+        public ulong ConnectionBandwidthReceivedLastSecondTotal { get; set; }
 
-        public int ConnectionBandwidthSentLastMinuteTotal { get; set; }
+        public ulong ConnectionBandwidthSentLastMinuteTotal { get; set; }
 
-        public int ConnectionBandwidthSentLastSecondTotal { get; set; }
+        public ulong ConnectionBandwidthSentLastSecondTotal { get; set; }
 
-        public int ConnectionBytesReceivedControl { get; set; }
+        public ulong ConnectionBytesReceivedControl { get; set; }
 
-        public int ConnectionBytesReceivedKeepalive { get; set; }
+        public ulong ConnectionBytesReceivedKeepalive { get; set; }
 
-        public int ConnectionBytesReceivedSpeech { get; set; }
+        public ulong ConnectionBytesReceivedSpeech { get; set; }
 
-        public int ConnectionBytesReceivedTotal { get; set; }
+        public ulong ConnectionBytesReceivedTotal { get; set; }
 
-        public int ConnectionBytesSentControl { get; set; }
+        public ulong ConnectionBytesSentControl { get; set; }
 
-        public int ConnectionBytesSentKeepalive { get; set; }
+        public ulong ConnectionBytesSentKeepalive { get; set; }
 
-        public int ConnectionBytesSentSpeech { get; set; }
+        public ulong ConnectionBytesSentSpeech { get; set; }
 
-        public int ConnectionBytesSentTotal { get; set; }
+        public ulong ConnectionBytesSentTotal { get; set; }
 
-        public int ConnectionFiletransferBandwidthReceived { get; set; }
+        public ulong ConnectionFiletransferBandwidthReceived { get; set; }
 
-        public int ConnectionFiletransferBandwidthSent { get; set; }
+        public ulong ConnectionFiletransferBandwidthSent { get; set; }
 
-        public int ConnectionFiletransferBytesReceivedTotal { get; set; }
+        public ulong ConnectionFiletransferBytesReceivedTotal { get; set; }
 
-        public int ConnectionFiletransferBytesSentTotal { get; set; }
+        public ulong ConnectionFiletransferBytesSentTotal { get; set; }
 
-        public int ConnectionPacketsReceivedControl { get; set; }
+        public ulong ConnectionPacketsReceivedControl { get; set; }
 
-        public int ConnectionPacketsReceivedKeepalive { get; set; }
+        public ulong ConnectionPacketsReceivedKeepalive { get; set; }
 
-        public int ConnectionPacketsReceivedSpeech { get; set; }
+        public ulong ConnectionPacketsReceivedSpeech { get; set; }
 
-        public int ConnectionPacketsReceivedTotal { get; set; }
+        public ulong ConnectionPacketsReceivedTotal { get; set; }
 
-        public int ConnectionPacketsSentControl { get; set; }
+        public ulong ConnectionPacketsSentControl { get; set; }
 
-        public int ConnectionPacketsSentKeepalive { get; set; }
+        public ulong ConnectionPacketsSentKeepalive { get; set; }
 
-        public int ConnectionPacketsSentSpeech { get; set; }
+        public ulong ConnectionPacketsSentSpeech { get; set; }
 
-        public int ConnectionPacketsSentTotal { get; set; }
+        public ulong ConnectionPacketsSentTotal { get; set; }
 
         public int VirtualServerAntifloodPointsNeededCommandBlock { get; set; }
 

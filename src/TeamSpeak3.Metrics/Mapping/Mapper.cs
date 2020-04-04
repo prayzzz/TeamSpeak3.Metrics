@@ -86,29 +86,50 @@ namespace TeamSpeak3.Metrics.Mapping
 
         private static void Set<T>(object[] parameters, string value, PropertyInfo setter, T obj) where T : new()
         {
-            if (setter.PropertyType == IntType)
-            {
-                parameters[0] = int.Parse(value);
-                setter.GetSetMethod().Invoke(obj, parameters);
-            }
-            else if (setter.PropertyType == LongType)
-            {
-                parameters[0] = ulong.Parse(value);
-                setter.GetSetMethod().Invoke(obj, parameters);
-            }
-            else if (setter.PropertyType == StringType)
+            if (setter.PropertyType == StringType)
             {
                 parameters[0] = Escaper.ReverseEscape(value);
                 setter.GetSetMethod().Invoke(obj, parameters);
             }
+            else if (setter.PropertyType == IntType)
+            {
+                if (int.TryParse(value, out var result))
+                {
+                    parameters[0] = result;
+                    setter.GetSetMethod().Invoke(obj, parameters);
+                }
+                else
+                {
+                    throw new ArgumentException($"Couldn't parse value: {value} to {setter.PropertyType} for setter {setter.Name}");
+                }
+            }
+            else if (setter.PropertyType == LongType)
+            {
+                if (ulong.TryParse(value, out var result))
+                {
+                    parameters[0] = result;
+                    setter.GetSetMethod().Invoke(obj, parameters);
+                }
+                else
+                {
+                    throw new ArgumentException($"Couldn't parse value: {value} to {setter.PropertyType} for setter {setter.Name}");
+                }
+            }
             else if (setter.PropertyType == DoubleType)
             {
-                parameters[0] = double.Parse(value);
-                setter.GetSetMethod().Invoke(obj, parameters);
+                if (double.TryParse(value, out var result))
+                {
+                    parameters[0] = result;
+                    setter.GetSetMethod().Invoke(obj, parameters);
+                }
+                else
+                {
+                    throw new ArgumentException($"Couldn't parse value: {value} to {setter.PropertyType} for setter {setter.Name}");
+                }
             }
             else
             {
-                throw new ArgumentOutOfRangeException(setter.PropertyType.ToString());
+                throw new ArgumentOutOfRangeException(setter.PropertyType.ToString(), $"Setter: {setter.Name}, Value: {value}");
             }
         }
 
