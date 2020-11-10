@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +35,7 @@ namespace TeamSpeak3.Metrics.AspNetCore.Hosted
                 }
                 catch (Exception e)
                 {
+                    Current = Enumerable.Empty<TeamSpeak3Metrics>();
                     _logger.LogError(e, "Exception while collecting Metrics");
                 }
 

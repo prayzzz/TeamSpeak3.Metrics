@@ -19,7 +19,7 @@ namespace TeamSpeak3.Metrics
 
     public class Gateway : IGateway
     {
-        private const string ClientlistCommand = "clientlist";
+        private const string ClientListCommand = "clientlist";
         private const string ServerInfoCommand = "serverinfo";
         private const string ServerListCommand = "serverlist";
 
@@ -41,11 +41,11 @@ namespace TeamSpeak3.Metrics
                 await Login(connection);
                 await SelectVirtualServer(virtualServerPort, connection);
 
-                var response = await connection.SendAndReceive(ClientlistCommand);
+                var response = await connection.SendAndReceive(ClientListCommand);
                 var dataResponse = Mapper.ToData<Client>(response);
                 if (!dataResponse.IsSuccess)
                 {
-                    ThrowMetricsException(dataResponse, ClientlistCommand);
+                    ThrowMetricsException(dataResponse, ClientListCommand);
                 }
 
                 return dataResponse.Data;
